@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Headphones Collection - PRISM Mock Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #ffffff; color: #111827; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+    .top-strip {
+      background: #111827;
+      color: #e5e7eb;
+      font-size: 12px;
+      padding: 8px 24px;
+      text-align: center;
+    }
+    .warning-strip {
+      background: #f97316;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      padding: 10px 20px;
+    }
+    .main-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 14px 24px;
+    }
+    .logo { font-weight: 800; font-size: 24px; letter-spacing: 0.5px; color: #111827; }
+    .nav-links { display: flex; gap: 14px; font-size: 13px; color: #4b5563; flex-wrap: wrap; }
+    .nav-links a:hover { color: #111827; }
+    .nav-actions { margin-left: auto; display: flex; gap: 14px; color: #6b7280; font-size: 13px; }
+    .prism-banner {
+      background: linear-gradient(135deg, #4c1d95, #1d4ed8);
+      color: #e0e7ff;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+    }
+    .prism-badge {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .live-counter { color: #c7d2fe; font-weight: 500; white-space: nowrap; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    .breadcrumb { color: #6b7280; font-size: 12px; margin: 6px 0 20px; }
+    .page-title { font-size: 30px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .page-subtitle { color: #6b7280; margin-bottom: 20px; }
+    .toolbar {
+      border-top: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: #374151;
+    }
+    .toolbar b { color: #111827; }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .product-grid-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #ffffff;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .product-grid-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(17, 24, 39, 0.08); }
+    .product-grid-card.active { border-color: #4f46e5; box-shadow: 0 0 0 1px #4f46e5; }
+    .grid-product-image-wrap { position: relative; background: #f9fafb; padding: 14px; }
+    .launch-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #111827;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+    .grid-product-img {
+      width: 100%;
+      height: 185px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .grid-product-body { padding: 14px; }
+    .grid-product-category {
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+    .grid-product-name {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.35;
+      min-height: 40px;
+      margin-bottom: 6px;
+    }
+    .grid-product-meta {
+      color: #4b5563;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    .grid-product-price { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .grid-product-price .sale { color: #111827; font-size: 20px; font-weight: 800; }
+    .grid-product-price .mrp { color: #9ca3af; text-decoration: line-through; font-size: 12px; }
+    .grid-product-btn {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      background: #111827;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px;
+      cursor: pointer;
+    }
+    .reviews-section {
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      background: #ffffff;
+      padding: 24px;
+    }
+    .reviews-section h2 { font-size: 21px; margin-bottom: 4px; }
+    .subtitle { color: #6b7280; margin-bottom: 20px; }
+    .write-review {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #f9fafb;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .write-review h3 { font-size: 16px; margin-bottom: 14px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #4b5563;
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 14px;
+      background: #ffffff;
+      color: #111827;
+      outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: #4f46e5; }
+    .form-group textarea { resize: vertical; min-height: 92px; }
+    .star-rating-row { display: flex; gap: 4px; }
+    .star-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: #d1d5db;
+      cursor: pointer;
+      transition: transform 0.1s;
+      padding: 1px;
+    }
+    .btn-submit {
+      border: none;
+      border-radius: 8px;
+      background: #111827;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    .submit-status { display: none; margin-top: 10px; border-radius: 8px; padding: 9px 12px; font-size: 13px; }
+    .submit-status.loading { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .submit-status.success { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .submit-status.warning { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+    .review-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 16px;
+      background: #ffffff;
+      margin-bottom: 10px;
+      animation: fadeIn 0.25s;
+    }
+    .review-card.new { border-color: #4f46e5; background: #eef2ff; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .review-header { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .review-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #111827;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .review-user { font-size: 14px; font-weight: 700; }
+    .review-stars { font-size: 13px; }
+    .review-time { margin-left: auto; font-size: 12px; color: #6b7280; }
+    .review-text { color: #374151; font-size: 14px; line-height: 1.65; }
+    .review-badge {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      color: #3730a3;
+      background: #e0e7ff;
+      border: 1px solid #c7d2fe;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .marketing-copy {
+      margin: 30px 0 34px;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 24px;
+      background: #ffffff;
+    }
+    .marketing-copy h3 { font-size: 22px; margin-bottom: 14px; }
+    .marketing-copy p { color: #4b5563; line-height: 1.7; margin-bottom: 10px; }
+    footer {
+      margin-top: 42px;
+      border-top: 1px solid #e5e7eb;
+      padding: 24px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 12px;
+    }
+    .prism-footer-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #4338ca;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .toolbar { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .prism-banner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-strip">Free Shipping PAN India</div>
+  <div class="warning-strip">We never ask for payment once an order is shipped. Beware of fraud calls.</div>
+
+  <nav class="main-nav">
+    <div class="logo">HAMMER</div>
+    <div class="nav-links">
+      <a href="#">Smartwatch</a>
+      <a href="#">True Wireless Earbuds</a>
+      <a href="#"><b>Headphones</b></a>
+      <a href="#">Speaker</a>
+      <a href="#">Neckbands</a>
+      <a href="#">Charging Essentials</a>
+    </div>
+    <div class="nav-actions">
+      <span>Search</span>
+      <span>Account</span>
+      <span>Cart</span>
+    </div>
+  </nav>
+
+  <div class="prism-banner">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="prism-badge">PRISM Simulation</span>
+      <span>This mock collection page is wired to the PRISM ingest API.</span>
+    </div>
+    <span class="live-counter" id="live-counter">Loading reviews...</span>
+  </div>
+
+  <div class="container">
+    <div class="breadcrumb">Home / Collections / Headphones</div>
+    <h1 class="page-title">Buy Best Over-Ear Headphones Online</h1>
+    <p class="page-subtitle">Deep bass headphones, gaming-ready audio, and long battery life.</p>
+
+    <div class="toolbar">
+      <div><b>12 products</b> in headphones collection</div>
+      <div>Sort: Featured | Best selling | Price low to high</div>
+    </div>
+
+    <div id="products-grid" class="products-grid"></div>
+
+    <section class="marketing-copy">
+      <h3>Best of Wireless Bluetooth Headphones</h3>
+      <p>
+        Discover a curated line-up of headphones with powerful drivers, ENC/ANC support, gaming modes,
+        and long playtime. This is a demo storefront inspired by a modern D2C audio brand collection page.
+      </p>
+      <p>
+        For this hackathon flow, selecting a product below updates reviews instantly and pushes new submissions
+        into the PRISM analytics pipeline for dashboard insights.
+      </p>
+    </section>
+  </div>
+
+  <footer>
+    <div>© 2026 Hammer Mock Collection - PRISM Hackathon Simulation</div>
+    <a href="http://localhost:5173" target="_blank" class="prism-footer-link">Open PRISM Intelligence Dashboard -></a>
+  </footer>
+
+  <script src="./simulation.js"></script>
+  <script>
+    const PLATFORM = 'brand';
+    let activeProductId = 'prod-001';
+    const headphoneCatalog = [
+      { slug: 'bash-vivid', title: 'Bash Vivid', price: 1799, mrp: 4999, badge: 'New Launch', tag: 'ANC upto 23dB | BT 5.3 + AUX' },
+      { slug: 'vibe', title: 'Hammer Vibe', price: 1099, mrp: 4999, badge: 'New Launch', tag: 'ENC | Gaming' },
+      { slug: 'bash-max', title: 'Bash Max', price: 1999, mrp: 8245, badge: 'Best Seller', tag: 'Wireless | Bluetooth v5.3' },
+      { slug: 'blaze', title: 'Blaze', price: 1799, mrp: 8999, badge: 'New Launch', tag: '50mm Drivers | RGB Lights' },
+      { slug: 'bash-pro', title: 'Bash Pro', price: 3499, mrp: 11999, badge: 'New Launch', tag: 'ANC + ENC | Quad Mics' },
+      { slug: 'bash-2', title: 'BASH 2.0', price: 1899, mrp: 8245, badge: 'Hot Seller', tag: 'Wireless | 40mm Drivers' },
+      { slug: 'bash', title: 'BASH', price: 1899, mrp: 8245, badge: '', tag: 'Wireless | 40mm Drivers' },
+      { slug: 'bash-lite', title: 'Bash Lite', price: 999, mrp: 3999, badge: '', tag: 'BT 5.3 | 3.5mm Audio Jack' },
+      { slug: 'nova-air', title: 'Nova Air X', price: 2199, mrp: 6999, badge: 'New', tag: 'ENC + 60H Playtime' },
+      { slug: 'probeat', title: 'ProBeat 360', price: 2599, mrp: 7999, badge: 'Top Rated', tag: 'Spatial Audio | Gaming' },
+      { slug: 'storm', title: 'Storm ANC', price: 2899, mrp: 9999, badge: 'Hot Deal', tag: 'Hybrid ANC | Fast Charge' },
+      { slug: 'wave-max', title: 'Wave Max Studio', price: 3299, mrp: 10999, badge: 'Premium', tag: 'Hi-Res Audio | Low Latency' }
+    ];
+
+    function numberFormat(num) {
+      return new Intl.NumberFormat('en-IN').format(num);
+    }
+
+    function imageForIndex(i) {
+      const fallback = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600';
+      return seedData?.products?.[i % seedData.products.length]?.images?.brand || fallback;
+    }
+
+    function renderHeadphoneCatalog(products) {
+      const grid = document.getElementById('products-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      headphoneCatalog.forEach((item, index) => {
+        const product = products[index % products.length];
+        const card = document.createElement('div');
+        card.className = 'product-grid-card';
+        card.dataset.productId = product.product_id;
+        card.innerHTML = `
+          <div class="grid-product-image-wrap">
+            ${item.badge ? `<span class="launch-tag">${item.badge}</span>` : ''}
+            <img src="${imageForIndex(index)}" alt="${item.title}" class="grid-product-img">
+          </div>
+          <div class="grid-product-body">
+            <div class="grid-product-category">Bluetooth Headphones</div>
+            <div class="grid-product-name">${item.title}</div>
+            <div class="grid-product-meta">${item.tag}</div>
+            <div class="grid-product-price">
+              <span class="sale">Rs. ${numberFormat(item.price)}</span>
+              <span class="mrp">Rs. ${numberFormat(item.mrp)}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;margin:6px 0 10px;">
+              <span>${starsHTML(Math.max(1, Math.min(5, Math.round(parseFloat(computeRatingMeta(product.product_id, PLATFORM).avg) || 0))))}</span>
+              <span style="font-size:12px;color:#6b7280;">${computeRatingMeta(product.product_id, PLATFORM).avg} (${computeRatingMeta(product.product_id, PLATFORM).total})</span>
+            </div>
+            <button class="grid-product-open-btn" style="width:100%;border:1px solid #d1d5db;background:#fff;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;padding:10px;">Open Product</button>
+          </div>
+        `;
+        card.querySelector('.grid-product-open-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          selectProduct(product.product_id, card);
+          const evt = new CustomEvent('open-product', { detail: { productId: product.product_id, platform: PLATFORM } });
+          window.dispatchEvent(evt);
+        });
+        card.addEventListener('click', () => {
+          selectProduct(product.product_id, card);
+          const evt = new CustomEvent('open-product', { detail: { productId: product.product_id, platform: PLATFORM } });
+          window.dispatchEvent(evt);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function selectProduct(productId, cardEl) {
+      activeProductId = productId;
+      document.querySelectorAll('.product-grid-card').forEach((c) => c.classList.remove('active'));
+      cardEl.classList.add('active');
+    }
+
+    async function init() {
+      await ensureSeedDataLoaded();
+      const products = seedData?.products || [];
+      if (!products.length) return;
+      renderHeadphoneCatalog(products);
+      const firstCard = document.querySelector('.product-grid-card');
+      firstCard?.classList.add('active');
+      await initProductCommerceExperience(PLATFORM);
+    }
+
+    init();
+  </script>
+</body>
+</html>

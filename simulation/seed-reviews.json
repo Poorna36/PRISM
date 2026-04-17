@@ -1,0 +1,131 @@
+{
+  "products": [
+    {
+      "product_id": "prod-001",
+      "name": "Aether Buds Pro",
+      "description": "True wireless earbuds with active noise cancellation, 30hr battery, and spatial audio",
+      "price": 4999,
+      "images": {
+        "amazon": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400",
+        "flipkart": "https://images.unsplash.com/photo-1606220838315-056192d5e927?w=400",
+        "jiomart": "https://images.unsplash.com/photo-1598331668826-20cecc596b86?w=400",
+        "brand": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400"
+      },
+      "platform_prices": { "amazon": 4799, "flipkart": 4899, "jiomart": 4999, "brand": 4699 },
+      "category": "Audio"
+    },
+    {
+      "product_id": "prod-002",
+      "name": "FlowBot Vacuum X3",
+      "description": "Smart robot vacuum with LiDAR mapping, 3000Pa suction, and 3hr battery life",
+      "price": 19999,
+      "images": {
+        "amazon": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+        "flipkart": "https://images.unsplash.com/photo-1563453392212-326f5e854473?w=400",
+        "jiomart": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+        "brand": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400"
+      },
+      "platform_prices": { "amazon": 18999, "flipkart": 19499, "jiomart": 19999, "brand": 18499 },
+      "category": "Home Appliances"
+    },
+    {
+      "product_id": "prod-003",
+      "name": "NovaCam 4K",
+      "description": "4K action camera with 3-axis gimbal stabilization, 120fps slow-mo, and 40m waterproof",
+      "price": 12999,
+      "images": {
+        "amazon": "https://images.unsplash.com/photo-1495707902641-75cac588d2e9?w=400",
+        "flipkart": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400",
+        "jiomart": "https://images.unsplash.com/photo-1574169208507-84376144848b?w=400",
+        "brand": "https://images.unsplash.com/photo-1495707902641-75cac588d2e9?w=400"
+      },
+      "platform_prices": { "amazon": 12499, "flipkart": 12999, "jiomart": 12999, "brand": 12299 },
+      "category": "Cameras"
+    },
+    {
+      "product_id": "prod-004",
+      "name": "ZenCharge 65W",
+      "description": "GaN charger with 4-port fast charging hub — USB-C PD 65W + 3x USB-A",
+      "price": 2999,
+      "images": {
+        "amazon": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400",
+        "flipkart": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400",
+        "jiomart": "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=400",
+        "brand": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400"
+      },
+      "platform_prices": { "amazon": 2799, "flipkart": 2899, "jiomart": 2999, "brand": 2699 },
+      "category": "Accessories"
+    }
+  ],
+  "reviews": [
+    { "id": "r001", "product_id": "prod-001", "platform": "amazon", "user": "Rahul M.", "rating": 5, "text": "Absolutely love the noise cancellation! Battery lasts all day even with ANC on. Worth every rupee.", "days_ago": 1 },
+    { "id": "r002", "product_id": "prod-001", "platform": "amazon", "user": "Priya S.", "rating": 4, "text": "Good sound quality but the packaging was slightly damaged on arrival. Product itself is great.", "days_ago": 3 },
+    { "id": "r003", "product_id": "prod-001", "platform": "amazon", "user": "Amit K.", "rating": 5, "text": "Best earbuds in this range! Build quality is exceptional. Performance is top notch.", "days_ago": 7 },
+    { "id": "r004", "product_id": "prod-001", "platform": "amazon", "user": "Sneha R.", "rating": 2, "text": "Packaging was completely crushed. Box damaged. Had to reorder. Customer support took 5 days to respond.", "days_ago": 10 },
+    { "id": "r005", "product_id": "prod-001", "platform": "amazon", "user": "Vikram P.", "rating": 5, "text": "The spatial audio feature is mind-blowing. Value for money is excellent at this price point.", "days_ago": 14 },
+    { "id": "r006", "product_id": "prod-001", "platform": "amazon", "user": "Ananya B.", "rating": 3, "text": "Battery drains faster than advertised. Maybe 20hrs not 30hrs. Performance otherwise is solid.", "days_ago": 21 },
+    { "id": "r007", "product_id": "prod-001", "platform": "amazon", "user": "Rohan T.", "rating": 4, "text": "Delivery was superfast! Arrived next day. Sound quality is very impressive for the price.", "days_ago": 28 },
+    { "id": "r008", "product_id": "prod-001", "platform": "amazon", "user": "Kavya M.", "rating": 1, "text": "Stopped working after 2 weeks. Support refused refund saying it was user damage. Very disappointing.", "days_ago": 35 },
+    { "id": "r009", "product_id": "prod-001", "platform": "amazon", "user": "Arjun L.", "rating": 5, "text": "Premium feel, premium sound. Build quality rivals products costing 3x the price. Highly recommend!", "days_ago": 42 },
+    { "id": "r010", "product_id": "prod-001", "platform": "amazon", "user": "Divya N.", "rating": 4, "text": "Good product overall. Delivery was on time. Packaging could be better though.", "days_ago": 49 },
+
+    { "id": "r011", "product_id": "prod-001", "platform": "flipkart", "user": "Sanjay K.", "rating": 5, "text": "Sound quality thodi ajeeb thi pehle par ab sahi lag rahi hai. Battery life bahut acha hai!", "days_ago": 2 },
+    { "id": "r012", "product_id": "prod-001", "platform": "flipkart", "user": "Meera P.", "rating": 3, "text": "Delivery mein 5 din extra lag gaye bina notification ke. Support se baat ki toh koi help nahi mili.", "days_ago": 5 },
+    { "id": "r013", "product_id": "prod-001", "platform": "flipkart", "user": "Karan S.", "rating": 5, "text": "Ekdum best product hai! Build quality solid hai. Value for money 10/10.", "days_ago": 9 },
+    { "id": "r014", "product_id": "prod-001", "platform": "flipkart", "user": "Pooja V.", "rating": 4, "text": "Packaging slightly dented but product fine. Performance is excellent. Fast delivery!", "days_ago": 15 },
+    { "id": "r015", "product_id": "prod-001", "platform": "flipkart", "user": "Arun M.", "rating": 2, "text": "The packaging was terrible. Arrived in a crushed box. Same issue as other reviews mention.", "days_ago": 22 },
+    { "id": "r016", "product_id": "prod-001", "platform": "flipkart", "user": "Lakshmi R.", "rating": 5, "text": "Customer support was super helpful when I had a pairing issue. Resolved in 10 minutes!", "days_ago": 30 },
+    { "id": "r017", "product_id": "prod-001", "platform": "flipkart", "user": "Nitin B.", "rating": 4, "text": "Good value for money. Performance is great. Battery life could be better though.", "days_ago": 38 },
+    { "id": "r018", "product_id": "prod-001", "platform": "flipkart", "user": "Rekha T.", "rating": 5, "text": "Very impressed with build quality. Feels like a premium product. Highly recommend!", "days_ago": 45 },
+
+    { "id": "r019", "product_id": "prod-001", "platform": "jiomart", "user": "Vijay K.", "rating": 4, "text": "Good product. Delivery was fast. Packaging was intact. Battery life is as advertised.", "days_ago": 4 },
+    { "id": "r020", "product_id": "prod-001", "platform": "jiomart", "user": "Sunita R.", "rating": 5, "text": "Best purchase this year! Performance is amazing. Customer support was very responsive.", "days_ago": 11 },
+    { "id": "r021", "product_id": "prod-001", "platform": "jiomart", "user": "Manoj S.", "rating": 2, "text": "Box was destroyed in transit. Packaging is clearly not adequate for courier handling.", "days_ago": 18 },
+    { "id": "r022", "product_id": "prod-001", "platform": "jiomart", "user": "Geeta P.", "rating": 5, "text": "Value for money is excellent! Build quality is solid. Delivery was quick.", "days_ago": 25 },
+
+    { "id": "r023", "product_id": "prod-001", "platform": "brand", "user": "Deepak M.", "rating": 5, "text": "Bought directly from brand. Best experience — fast shipping, great packaging, excellent product!", "days_ago": 3 },
+    { "id": "r024", "product_id": "prod-001", "platform": "brand", "user": "Anita V.", "rating": 5, "text": "Build quality is outstanding. Performance exceeds expectations. Will buy again!", "days_ago": 10 },
+    { "id": "r025", "product_id": "prod-001", "platform": "brand", "user": "Suresh K.", "rating": 4, "text": "Good product, good service. Customer support chat feature is very helpful.", "days_ago": 17 },
+
+    { "id": "r026", "product_id": "prod-002", "platform": "amazon", "user": "Neeraj S.", "rating": 5, "text": "This robot vacuum is a game changer! Maps perfectly and misses nothing. Build quality is solid.", "days_ago": 2 },
+    { "id": "r027", "product_id": "prod-002", "platform": "amazon", "user": "Sheela P.", "rating": 3, "text": "Good performance but customer support was terrible. Took 1 week to get a response. Delivery was fine.", "days_ago": 6 },
+    { "id": "r028", "product_id": "prod-002", "platform": "amazon", "user": "Ravi K.", "rating": 4, "text": "LiDAR mapping is impressive! Battery life is good enough for a full apartment. Great value.", "days_ago": 12 },
+    { "id": "r029", "product_id": "prod-002", "platform": "amazon", "user": "Shobha M.", "rating": 2, "text": "Motor became noisy after a month. Support took forever. Not worth the premium price.", "days_ago": 20 },
+    { "id": "r030", "product_id": "prod-002", "platform": "amazon", "user": "Praveen T.", "rating": 5, "text": "Best robot vacuum under 20k! Suction is powerful, battery life is amazing. Highly recommend.", "days_ago": 28 },
+
+    { "id": "r031", "product_id": "prod-002", "platform": "flipkart", "user": "Harini R.", "rating": 4, "text": "Good product overall. Delivery was delayed but support was helpful once I reached them.", "days_ago": 4 },
+    { "id": "r032", "product_id": "prod-002", "platform": "flipkart", "user": "Balaji N.", "rating": 5, "text": "Performance is excellent! Maps my 3BHK perfectly. Value for money is top notch.", "days_ago": 9 },
+    { "id": "r033", "product_id": "prod-002", "platform": "flipkart", "user": "Usha K.", "rating": 3, "text": "Customer support response time is very slow. Product works okay but nothing exceptional.", "days_ago": 16 },
+    { "id": "r034", "product_id": "prod-002", "platform": "flipkart", "user": "Ganesh S.", "rating": 5, "text": "Superb build quality. Feels premium. Battery lasts the whole day for my home. Delivery was fast!", "days_ago": 23 },
+
+    { "id": "r035", "product_id": "prod-002", "platform": "jiomart", "user": "Lakshman P.", "rating": 4, "text": "Good robot vacuum at this price. Battery life is decent. Delivery was on time.", "days_ago": 7 },
+    { "id": "r036", "product_id": "prod-002", "platform": "jiomart", "user": "Savitha M.", "rating": 5, "text": "Performance is amazing for the price! Highly recommend to anyone looking for a robot vacuum.", "days_ago": 14 },
+    { "id": "r037", "product_id": "prod-002", "platform": "brand", "user": "Krishnan T.", "rating": 5, "text": "Premium product with premium service. Build quality is exceptional. Customer support is top notch.", "days_ago": 5 },
+
+    { "id": "r038", "product_id": "prod-003", "platform": "amazon", "user": "Abhi R.", "rating": 5, "text": "4K footage is crystal clear. Stabilization is incredible even while running. Best action cam under 15k!", "days_ago": 1 },
+    { "id": "r039", "product_id": "prod-003", "platform": "amazon", "user": "Snehal K.", "rating": 4, "text": "Great camera! Battery life could be longer but the slow-mo feature is amazing. Fast delivery!", "days_ago": 5 },
+    { "id": "r040", "product_id": "prod-003", "platform": "amazon", "user": "Nikhil V.", "rating": 5, "text": "Build quality is outstanding — survived a drop into water. 40m waterproof is not a joke!", "days_ago": 10 },
+    { "id": "r041", "product_id": "prod-003", "platform": "amazon", "user": "Pallavi S.", "rating": 2, "text": "Screen cracked after mild use. Customer support blamed me for it. Very poor quality control.", "days_ago": 17 },
+    { "id": "r042", "product_id": "prod-003", "platform": "amazon", "user": "Mohit G.", "rating": 5, "text": "Value for money is amazing! Performance is on par with cameras costing 3x the price.", "days_ago": 24 },
+
+    { "id": "r043", "product_id": "prod-003", "platform": "flipkart", "user": "Isha P.", "rating": 4, "text": "Good product overall. Delivery was fast. Performance is very good for the price.", "days_ago": 3 },
+    { "id": "r044", "product_id": "prod-003", "platform": "flipkart", "user": "Varun M.", "rating": 5, "text": "Stabilization is mind-blowing! Battery life is decent. Highly recommend for adventure sports.", "days_ago": 8 },
+    { "id": "r045", "product_id": "prod-003", "platform": "flipkart", "user": "Shruti K.", "rating": 3, "text": "Battery drains too fast. Barely 1.5 hours of recording. Customer support suggested firmware update — didn't help.", "days_ago": 15 },
+
+    { "id": "r046", "product_id": "prod-003", "platform": "jiomart", "user": "Aditya R.", "rating": 5, "text": "Excellent build quality! Very durable. Value for money is exceptional.", "days_ago": 6 },
+    { "id": "r047", "product_id": "prod-003", "platform": "brand", "user": "Charvi N.", "rating": 5, "text": "Bought from brand website. Best packaging, fastest delivery. Performance is outstanding!", "days_ago": 9 },
+
+    { "id": "r048", "product_id": "prod-004", "platform": "amazon", "user": "Tanmay S.", "rating": 5, "text": "Best GaN charger I've owned! Charges my laptop, phone, and tablet simultaneously. Compact and powerful.", "days_ago": 2 },
+    { "id": "r049", "product_id": "prod-004", "platform": "amazon", "user": "Ritika P.", "rating": 4, "text": "Good charger. Gets slightly warm under full load but performance is excellent. Fast delivery!", "days_ago": 5 },
+    { "id": "r050", "product_id": "prod-004", "platform": "amazon", "user": "Sameer K.", "rating": 5, "text": "Value for money is amazing! Build quality feels premium. Replaces 4 separate chargers!", "days_ago": 11 },
+    { "id": "r051", "product_id": "prod-004", "platform": "amazon", "user": "Nisha V.", "rating": 2, "text": "Stopped charging after 3 weeks. Customer support said warranty doesn't cover this. Disappointed.", "days_ago": 19 },
+    { "id": "r052", "product_id": "prod-004", "platform": "amazon", "user": "Rohit M.", "rating": 5, "text": "Build quality is solid. Performance is top notch. Best compact charger available in India!", "days_ago": 27 },
+
+    { "id": "r053", "product_id": "prod-004", "platform": "flipkart", "user": "Swati R.", "rating": 4, "text": "Good charger, fast delivery. Charges my MacBook at full speed. Value for money is good.", "days_ago": 4 },
+    { "id": "r054", "product_id": "prod-004", "platform": "flipkart", "user": "Kunal B.", "rating": 5, "text": "Compact design, powerful output. Build quality is excellent. Highly recommend!", "days_ago": 10 },
+    { "id": "r055", "product_id": "prod-004", "platform": "flipkart", "user": "Preethi K.", "rating": 3, "text": "Customer support was not helpful. But the charger itself works fine. Delivery was quick.", "days_ago": 16 },
+
+    { "id": "r056", "product_id": "prod-004", "platform": "jiomart", "user": "Harish P.", "rating": 5, "text": "Excellent product! Fast charging works perfectly. Build quality is solid. Great value.", "days_ago": 7 },
+    { "id": "r057", "product_id": "prod-004", "platform": "brand", "user": "Lalitha M.", "rating": 5, "text": "Official website purchase — great experience! Packaging is professional, delivery was fast. Love this charger!", "days_ago": 3 }
+  ]
+}

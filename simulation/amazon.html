@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amazon.in - Shop Large Appliances</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amazon+Ember:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, "Amazon Ember", sans-serif; font-size: 14px; color: #0F1111; background: #EAEDED; min-width: 1200px; }
+    a { color: #007185; text-decoration: none; }
+    a:hover { color: #C7511F; text-decoration: underline; }
+
+    /* ─── Navbar ────────────────────────────────────────────────────── */
+    #navbar {
+      background: #131921; color: #fff;
+      display: flex; align-items: center; padding: 8px 16px; gap: 8px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    #navbar .logo { border: 1px solid transparent; padding: 4px 6px; border-radius: 2px; display: flex; align-items: center; cursor: pointer; }
+    #navbar .logo:hover { border-color: #fff; }
+    .logo-text { font-size: 22px; font-weight: 900; color: #FF9900; letter-spacing: -1px; }
+    .logo-text span { color: #fff; font-size: 12px; vertical-align: super; }
+    .delivery-widget { border: 1px solid transparent; border-radius: 2px; padding: 4px 6px; cursor: pointer; min-width: 140px; }
+    .delivery-widget:hover { border-color: #fff; }
+    .delivery-widget .dw-label { font-size: 11px; color: #CCC; }
+    .delivery-widget .dw-loc { font-size: 12px; font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+    #navbar .search-wrap { flex: 1; display: flex; border-radius: 4px; overflow: hidden; height: 40px; }
+    .search-cat { background: #f3f3f3; border: none; padding: 0 8px; font-size: 12px; color: #555; border-right: 1px solid #ccc; cursor: pointer; }
+    .search-input { flex: 1; border: none; outline: none; padding: 0 10px; font-size: 14px; }
+    .search-btn { background: #febd69; border: none; padding: 0 14px; cursor: pointer; font-size: 18px; color: #333; }
+    .search-btn:hover { background: #f3a847; }
+    .nav-actions { display: flex; align-items: center; gap: 4px; }
+    .nav-item { border: 1px solid transparent; border-radius: 2px; padding: 4px 8px; cursor: pointer; color: #fff; white-space: nowrap; }
+    .nav-item:hover { border-color: #fff; }
+    .nav-item .top { font-size: 11px; color: #CCC; }
+    .nav-item .bottom { font-size: 12px; font-weight: bold; }
+    .nav-item.cart-item { display: flex; align-items: center; gap: 4px; }
+    .cart-icon { font-size: 26px; }
+    .cart-count { background: #F08804; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-top: -12px; margin-left: -8px; }
+
+    /* ─── Sub-navbar ────────────────────────────────────────────────── */
+    #sub-navbar { background: #232F3E; color: #fff; padding: 6px 16px; display: flex; gap: 18px; font-size: 13px; }
+    .sub-nav-item { color: #fff; cursor: pointer; padding: 2px 4px; border: 1px solid transparent; border-radius: 2px; }
+    .sub-nav-item:hover { border-color: #fff; }
+
+    /* ─── Breadcrumb ────────────────────────────────────────────────── */
+    #breadcrumb { background: #fff; padding: 8px 20px; font-size: 12px; color: #555; border-bottom: 1px solid #ddd; }
+    #breadcrumb a { color: #007185; }
+    #breadcrumb span { margin: 0 4px; }
+
+    /* ════════════════════════════════════════════════════════════════
+       PRODUCT SELECTION GRID (shown on load)
+    ════════════════════════════════════════════════════════════════ */
+    #product-picker {
+      max-width: 1280px; margin: 24px auto; padding: 0 20px;
+    }
+    .picker-heading {
+      font-size: 22px; font-weight: bold; color: #0F1111;
+      margin-bottom: 6px;
+    }
+    .picker-sub { font-size: 13px; color: #555; margin-bottom: 20px; }
+    .picker-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    .picker-card {
+      background: #fff; border: 2px solid #DDD; border-radius: 8px;
+      padding: 20px 16px; cursor: pointer; text-align: center;
+      transition: border-color .2s, box-shadow .2s, transform .15s;
+      position: relative;
+    }
+    .picker-card:hover {
+      border-color: #FF9900; box-shadow: 0 4px 16px rgba(0,0,0,.12);
+      transform: translateY(-3px);
+    }
+    .picker-card.selected {
+      border-color: #FF9900; box-shadow: 0 0 0 3px rgba(255,153,0,.3);
+    }
+    .picker-card .badge {
+      position: absolute; top: 10px; right: 10px;
+      background: #CC0C39; color: #fff; font-size: 11px; font-weight: bold;
+      padding: 2px 7px; border-radius: 3px;
+    }
+    .picker-emoji { font-size: 52px; margin-bottom: 12px; line-height: 1; }
+    .picker-name { font-size: 15px; font-weight: bold; color: #0F1111; margin-bottom: 4px; }
+    .picker-category { font-size: 12px; color: #555; margin-bottom: 10px; }
+    .picker-price-row { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-bottom: 4px; }
+    .picker-mrp { font-size: 12px; color: #888; text-decoration: line-through; }
+    .picker-deal { font-size: 18px; font-weight: bold; color: #0F1111; }
+    .picker-save { font-size: 12px; color: #CC0C39; font-weight: bold; }
+    .picker-rating { font-size: 12px; color: #555; }
+    .picker-stars { color: #FF9900; }
+    .btn-view-details {
+      margin-top: 12px; width: 100%;
+      background: #febd69; border: none; border-radius: 20px;
+      padding: 8px 0; font-size: 13px; font-weight: bold;
+      cursor: pointer; color: #0F1111;
+      transition: background .15s;
+    }
+    .btn-view-details:hover { background: #f3a847; }
+
+    /* ─── Arrow indicator ────────────────────────────────────────── */
+    #selection-arrow {
+      display: none; text-align: center; padding: 10px 0 0;
+      font-size: 13px; color: #007185; font-weight: bold;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       PRODUCT DETAIL (hidden until selection)
+    ════════════════════════════════════════════════════════════════ */
+    #detail-wrapper {
+      display: none;
+      animation: slideDown .35s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Product detail inner breadcrumb ──────────────────────── */
+    #detail-breadcrumb { background: #fff; padding: 8px 20px; font-size: 12px; color: #555; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; }
+    #detail-breadcrumb a { color: #007185; }
+    #detail-breadcrumb span { margin: 0 4px; }
+
+    /* ─── Product detail area ───────────────────────────────────── */
+    #main { background: #fff; max-width: 1280px; margin: 0 auto; }
+    .product-section { display: none; padding: 20px; }
+    .product-section.active { display: block; }
+    .product-grid { display: grid; grid-template-columns: 380px 1fr 280px; gap: 20px; }
+
+    /* ─── Left col ──────────────────────────────────────────────── */
+    .main-img {
+      width: 100%; height: 400px; background: #F0F0F0;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid #ddd; border-radius: 4px; color: #888;
+    }
+    .main-img .img-label { font-size: 14px; color: #888; text-align: center; line-height: 1.6; }
+    .thumb-strip { display: flex; gap: 8px; margin-top: 10px; }
+    .thumb { width: 60px; height: 60px; background: #F0F0F0; border: 2px solid #DDD; border-radius: 3px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; }
+    .thumb.active { border-color: #FF9900; }
+
+    /* ─── Middle col ────────────────────────────────────────────── */
+    .product-name { font-size: 20px; font-weight: normal; line-height: 1.4; margin-bottom: 8px; }
+    .brand-link { font-size: 13px; margin-bottom: 6px; }
+    .rating-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .stars-display { color: #FF9900; font-size: 16px; }
+    .rating-count { color: #007185; font-size: 13px; }
+    .divider { border: none; border-top: 1px solid #DDD; margin: 10px 0; }
+    .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+    .price-mrp { font-size: 14px; color: #555; text-decoration: line-through; }
+    .price-deal { font-size: 26px; font-weight: bold; }
+    .price-save { font-size: 14px; color: #CC0C39; font-weight: bold; }
+    .tax-note { font-size: 12px; color: #555; margin-bottom: 6px; }
+    .emi-note { font-size: 13px; color: #555; margin-bottom: 12px; }
+    .emi-note a { color: #007185; }
+    .offers-grid { display: flex; gap: 10px; margin-bottom: 14px; }
+    .offer-card { border: 1px solid #DDD; border-radius: 4px; padding: 8px 10px; flex: 1; font-size: 12px; background: #f9f9f9; }
+    .offer-card .offer-title { font-weight: bold; color: #0F1111; margin-bottom: 3px; font-size: 13px; }
+    .offer-card .offer-detail { color: #555; }
+    .service-strip { display: flex; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+    .service-item { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; color: #333; text-align: center; width: 68px; }
+    .service-icon { font-size: 22px; }
+    .variant-section { margin-bottom: 12px; }
+    .variant-label { font-size: 13px; font-weight: bold; margin-bottom: 6px; }
+    .swatch-row { display: flex; gap: 8px; }
+    .swatch { width: 40px; height: 40px; border-radius: 3px; border: 2px solid #ddd; cursor: pointer; transition: border-color .15s; }
+    .swatch.active { border-color: #FF9900; box-shadow: 0 0 0 2px #FF9900; }
+    .size-row { display: flex; gap: 8px; }
+    .size-pill { padding: 6px 14px; border: 1px solid #D5D9D9; border-radius: 3px; cursor: pointer; font-size: 13px; background: #fff; }
+    .size-pill.active { border-color: #FF9900; background: #FFF8E7; }
+    .size-pill:hover { border-color: #FF9900; }
+
+    /* ─── Buy box ───────────────────────────────────────────────── */
+    .buybox { border: 1px solid #DDD; border-radius: 4px; padding: 16px; }
+    .exchange-option { border: 1px solid #DDD; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; }
+    .exchange-option.selected { border-color: #FF9900; background: #FFF8E7; }
+    .exchange-option input[type="radio"] { margin-right: 8px; accent-color: #FF9900; }
+    .exchange-price { font-size: 17px; font-weight: bold; }
+    .exchange-sub { font-size: 12px; color: #555; }
+    .delivery-info { font-size: 13px; margin: 10px 0; }
+    .delivery-info .free { color: #007600; font-weight: bold; }
+    .delivery-info .addr { font-size: 12px; color: #555; }
+    .in-stock { color: #007600; font-size: 16px; margin-bottom: 6px; }
+    .seller-info { font-size: 12px; color: #555; margin-bottom: 10px; }
+    .seller-info a { color: #007185; }
+    .qty-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 13px; }
+    .qty-select { padding: 4px 8px; border: 1px solid #888; border-radius: 3px; background: #f0f2f2; font-size: 13px; cursor: pointer; }
+    .btn-atc, .btn-buy { width: 100%; padding: 10px; border: none; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 8px; transition: filter .15s; }
+    .btn-atc { background: #febd69; color: #0F1111; }
+    .btn-atc:hover { filter: brightness(0.93); }
+    .btn-buy { background: #FFA41C; color: #0F1111; }
+    .btn-buy:hover { filter: brightness(0.93); }
+    .wishlist-link { display: block; text-align: center; font-size: 13px; color: #007185; margin-top: 4px; }
+
+    /* ─── Back to selection link ────────────────────────────────── */
+    #back-to-selection {
+      max-width: 1280px; margin: 0 auto;
+      padding: 10px 20px 0;
+      background: #fff;
+    }
+    #back-to-selection button {
+      background: none; border: none; color: #007185; font-size: 13px;
+      cursor: pointer; padding: 0; display: flex; align-items: center; gap: 4px;
+    }
+    #back-to-selection button:hover { color: #C7511F; text-decoration: underline; }
+
+    /* ─── Toast ─────────────────────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #232F3E; color: #fff; padding: 12px 24px; border-radius: 4px;
+      font-size: 14px; opacity: 0; transition: opacity .3s, transform .3s;
+      z-index: 999; pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ─── Reviews Section ───────────────────────────────────────── */
+    #reviews-section { background: #fff; max-width: 1280px; margin: 16px auto 0; padding: 24px 20px; border-top: 8px solid #EAEDED; }
+    .reviews-header { font-size: 22px; font-weight: bold; margin-bottom: 16px; }
+    .reviews-layout { display: grid; grid-template-columns: 260px 1fr; gap: 30px; }
+    .big-rating { font-size: 56px; font-weight: bold; line-height: 1; }
+    .big-stars { font-size: 20px; color: #FF9900; margin: 4px 0; }
+    .rating-count-sub { font-size: 12px; color: #555; }
+    .bar-chart { margin-top: 12px; }
+    .bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 12px; }
+    .bar-label { width: 30px; color: #007185; }
+    .bar-outer { flex: 1; height: 10px; background: #DDD; border-radius: 3px; overflow: hidden; }
+    .bar-inner { height: 100%; background: #FF9900; border-radius: 3px; }
+    .live-counter { font-size: 13px; color: #555; margin-bottom: 14px; padding: 8px 12px; background: #F0F9F0; border-left: 3px solid #007600; border-radius: 2px; }
+    .live-counter strong { color: #007600; }
+    .write-review-btn { background: #f0f2f2; border: 1px solid #D5D9D9; border-radius: 3px; padding: 8px 16px; font-size: 13px; cursor: pointer; margin-bottom: 16px; }
+    .write-review-btn:hover { background: #e7e9e9; }
+    #review-form-wrap { display: none; border: 1px solid #DDD; border-radius: 4px; padding: 16px; margin-bottom: 20px; background: #FAFAFA; }
+    #review-form-wrap h4 { margin-bottom: 12px; font-size: 15px; }
+    .star-picker { display: flex; gap: 4px; margin-bottom: 10px; }
+    .star-pick { font-size: 28px; color: #DDD; cursor: pointer; transition: color .1s; }
+    .star-pick.lit { color: #FF9900; }
+    .form-field { margin-bottom: 10px; }
+    .form-field label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+    .form-field textarea, .form-field input[type="text"] { width: 100%; padding: 8px 10px; border: 1px solid #888; border-radius: 3px; font-size: 13px; font-family: Arial, sans-serif; }
+    .form-field textarea { resize: vertical; min-height: 80px; }
+    .btn-post { background: #febd69; border: none; border-radius: 3px; padding: 8px 20px; font-size: 13px; font-weight: bold; cursor: pointer; }
+    .btn-post:hover { background: #f3a847; }
+    .review-card { border-bottom: 1px solid #EEE; padding: 14px 0; }
+    .review-card:last-child { border-bottom: none; }
+    .rc-name { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+    .rc-stars { color: #FF9900; font-size: 15px; }
+    .rc-date { font-size: 12px; color: #555; margin-left: 8px; }
+    .rc-text { font-size: 14px; margin-top: 6px; color: #0F1111; }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    #footer { background: #232F3E; color: #DDD; text-align: center; padding: 20px; font-size: 13px; margin-top: 30px; }
+    #footer a { color: #DDD; margin: 0 10px; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ NAVBAR ════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="logo" onclick="backToSelection()">
+    <span class="logo-text">amazon<span>.in</span></span>
+  </div>
+  <div class="delivery-widget">
+    <div class="dw-label">&#128205; Deliver to</div>
+    <div class="dw-loc" title="PESITM Shivamogga, NH206, Sagar Road, Shivamogga, 572004">Shivamogga 572004</div>
+  </div>
+  <div class="search-wrap">
+    <select class="search-cat"><option>All</option><option>Electronics</option><option>Appliances</option></select>
+    <input class="search-input" type="text" placeholder="Search Amazon.in" />
+    <button class="search-btn">&#128269;</button>
+  </div>
+  <div class="nav-actions">
+    <div class="nav-item"><div class="top">Hello, Sign in</div><div class="bottom">Account &amp; Lists &#9660;</div></div>
+    <div class="nav-item"><div class="top">Returns</div><div class="bottom">&amp; Orders</div></div>
+    <div class="nav-item cart-item">
+      <div class="cart-icon">&#128722;</div>
+      <div><div class="cart-count">0</div><div class="bottom">Cart</div></div>
+    </div>
+  </div>
+</nav>
+
+<!-- Sub-navbar -->
+<div id="sub-navbar">
+  <span class="sub-nav-item">&#9776; All</span>
+  <span class="sub-nav-item">Today's Deals</span>
+  <span class="sub-nav-item">Mobiles</span>
+  <span class="sub-nav-item">Electronics</span>
+  <span class="sub-nav-item">Fashion</span>
+  <span class="sub-nav-item">Amazon Pay</span>
+  <span class="sub-nav-item">Prime</span>
+  <span class="sub-nav-item">Home &amp; Kitchen</span>
+  <span class="sub-nav-item">Sell</span>
+</div>
+
+<!-- Breadcrumb -->
+<div id="breadcrumb">
+  <a href="#">Home &amp; Kitchen</a>
+  <span>›</span>
+  <a href="#">Large Appliances</a>
+</div>
+
+<!-- ══════════════════ PRODUCT PICKER (shown on load) ════════════════ -->
+<div id="product-picker">
+  <div class="picker-heading">Select a Product to View Details</div>
+  <div class="picker-sub">Choose from our top Large Appliances below — click to view full product details, pricing, and reviews.</div>
+  <div class="picker-grid">
+
+    <!-- Card 1 -->
+    <div class="picker-card" id="card-p1" onclick="selectProduct('p1')">
+      <div class="badge">-36%</div>
+      <div class="picker-emoji">🌬️</div>
+      <div class="picker-name">Split AC 1.5 Ton</div>
+      <div class="picker-category">Air Conditioners</div>
+      <div class="picker-price-row">
+        <span class="picker-mrp">₹68,490</span>
+        <span class="picker-deal">₹43,990</span>
+      </div>
+      <div class="picker-save">Save ₹24,500</div>
+      <div class="picker-rating"><span class="picker-stars">★★★★☆</span> 3.8 (584)</div>
+      <button class="btn-view-details">View Details</button>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="picker-card" id="card-p2" onclick="selectProduct('p2')">
+      <div class="badge">-35%</div>
+      <div class="picker-emoji">👕</div>
+      <div class="picker-name">Washing Machine 7 kg</div>
+      <div class="picker-category">Washing Machines</div>
+      <div class="picker-price-row">
+        <span class="picker-mrp">₹52,990</span>
+        <span class="picker-deal">₹34,490</span>
+      </div>
+      <div class="picker-save">Save ₹18,500</div>
+      <div class="picker-rating"><span class="picker-stars">★★★★☆</span> 3.8 (584)</div>
+      <button class="btn-view-details">View Details</button>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="picker-card" id="card-p3" onclick="selectProduct('p3')">
+      <div class="badge">-39%</div>
+      <div class="picker-emoji">📺</div>
+      <div class="picker-name">4K Smart TV 55"</div>
+      <div class="picker-category">Televisions</div>
+      <div class="picker-price-row">
+        <span class="picker-mrp">₹89,990</span>
+        <span class="picker-deal">₹54,999</span>
+      </div>
+      <div class="picker-save">Save ₹34,991</div>
+      <div class="picker-rating"><span class="picker-stars">★★★★☆</span> 3.8 (584)</div>
+      <button class="btn-view-details">View Details</button>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="picker-card" id="card-p4" onclick="selectProduct('p4')">
+      <div class="badge">-30%</div>
+      <div class="picker-emoji">❄️</div>
+      <div class="picker-name">Refrigerator 265 L</div>
+      <div class="picker-category">Refrigerators</div>
+      <div class="picker-price-row">
+        <span class="picker-mrp">₹38,490</span>
+        <span class="picker-deal">₹26,990</span>
+      </div>
+      <div class="picker-save">Save ₹11,500</div>
+      <div class="picker-rating"><span class="picker-stars">★★★★☆</span> 3.8 (584)</div>
+      <button class="btn-view-details">View Details</button>
+    </div>
+
+  </div><!-- /.picker-grid -->
+
+  <!-- Scroll indicator -->
+  <div id="selection-arrow">&#9660; Scroll down to see product details</div>
+</div><!-- /#product-picker -->
+
+<!-- ══════════════════ DETAIL WRAPPER (hidden until selection) ════════ -->
+<div id="detail-wrapper">
+
+  <!-- Back to selection -->
+  <div id="back-to-selection">
+    <button onclick="backToSelection()">&#8592; Back to product selection</button>
+  </div>
+
+  <!-- Detail breadcrumb -->
+  <div id="detail-breadcrumb">
+    <a href="#" onclick="backToSelection(); return false;">Home &amp; Kitchen</a>
+    <span>›</span>
+    <a href="#" onclick="backToSelection(); return false;">Large Appliances</a>
+    <span>›</span>
+    <span id="detail-crumb-category">Air Conditioners</span>
+    <span>›</span>
+    <span id="detail-crumb-name">Model X1 Premium</span>
+  </div>
+
+  <div id="main">
+
+    <!-- ── PRODUCT 1: Split AC ──────────────────────────────────── -->
+    <div id="p1" class="product-section">
+      <div class="product-grid">
+        <div class="img-col">
+          <div class="main-img"><div class="img-label">🌬️<br/>Product Image<br/>Split AC 1.5T</div></div>
+          <div class="thumb-strip">
+            <div class="thumb active">Img 1</div><div class="thumb">Img 2</div>
+            <div class="thumb">Img 3</div><div class="thumb">Img 4</div>
+          </div>
+        </div>
+        <div class="info-col">
+          <div class="product-name">[PRODUCT NAME] — Premium Quality, High Performance Split AC Model X1 | 1.5 Ton, 5 Star, Inverter, Wi-Fi Enabled</div>
+          <div class="brand-link"><a href="#">Visit the Brand Store</a></div>
+          <div class="rating-row">
+            <span class="stars-display">★★★★☆</span>
+            <a href="#reviews-section" class="rating-count">3.8 <span style="color:#555">out of 5</span> (584 ratings)</a>
+          </div>
+          <hr class="divider"/>
+          <div class="price-row">
+            <span class="price-mrp">M.R.P.: ₹68,490</span>
+            <span class="price-deal">₹43,990</span>
+            <span class="price-save">(-36%)</span>
+          </div>
+          <div class="tax-note">Inclusive of all taxes</div>
+          <div class="emi-note">EMI starts at ₹1,547. <a href="#">No Cost EMI available</a></div>
+          <div class="offers-grid">
+            <div class="offer-card"><div class="offer-title">No Cost EMI</div><div class="offer-detail">Up to ₹4,416 interest savings on select Credit Cards</div></div>
+            <div class="offer-card"><div class="offer-title">&#128176; Cashback</div><div class="offer-detail">Up to ₹1,319 as Amazon Pay Balance</div></div>
+            <div class="offer-card"><div class="offer-title">&#127970; Bank Offer</div><div class="offer-detail">Up to ₹1,500 discount on select Credit Cards</div></div>
+          </div>
+          <div class="service-strip">
+            <div class="service-item"><div class="service-icon">🔧</div><div>Installation Available</div></div>
+            <div class="service-item"><div class="service-icon">🛡️</div><div>3 Year Warranty</div></div>
+            <div class="service-item"><div class="service-icon">🔄</div><div>10 Days Replacement</div></div>
+            <div class="service-item"><div class="service-icon">🚚</div><div>Free Delivery</div></div>
+            <div class="service-item"><div class="service-icon">📦</div><div>Amazon Delivered</div></div>
+          </div>
+          <div class="variant-section">
+            <div class="variant-label">Colour: White</div>
+            <div class="swatch-row">
+              <div class="swatch active" style="background:#F5F5F5;" onclick="selectSwatch(this)"></div>
+              <div class="swatch" style="background:#BCCCDC;" onclick="selectSwatch(this)"></div>
+              <div class="swatch" style="background:#2D3142;" onclick="selectSwatch(this)"></div>
+            </div>
+          </div>
+          <div class="variant-section">
+            <div class="variant-label">Capacity:</div>
+            <div class="size-row">
+              <div class="size-pill active" onclick="selectSize(this)">1 Ton</div>
+              <div class="size-pill" onclick="selectSize(this)">1.5 Ton</div>
+              <div class="size-pill" onclick="selectSize(this)">2 Ton</div>
+            </div>
+          </div>
+        </div>
+        <div class="buy-col">
+          <div class="buybox">
+            <div class="exchange-option selected" onclick="selectExchange(this)">
+              <label><input type="radio" name="ex1" checked/> <span class="exchange-price">₹43,990</span></label>
+              <div class="exchange-sub">Without Exchange</div>
+            </div>
+            <div class="exchange-option" onclick="selectExchange(this)">
+              <label><input type="radio" name="ex1"/> <span class="exchange-price">Up to ₹3,580 off</span></label>
+              <div class="exchange-sub">With Exchange</div>
+            </div>
+            <div class="delivery-info">
+              <span class="free">FREE Delivery</span><br/>
+              <span class="addr">PESITM Shivamogga, NH206, Sagar Road, Shivamogga, 572004, Karnataka</span>
+            </div>
+            <div class="in-stock">In stock</div>
+            <div class="seller-info">Ships from: <strong>Amazon</strong><br/>Sold by: <a href="#">DAWNTECH ELECTRONICS PRIVATE LIMITED</a></div>
+            <div class="qty-row"><label>Qty: </label><select class="qty-select"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+            <button class="btn-atc" onclick="showToast('Added to cart!')">Add to Cart</button>
+            <button class="btn-buy" onclick="showToast('Redirecting to checkout...')">Buy Now</button>
+            <a href="#" class="wishlist-link">Add to Wish List</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PRODUCT 2: Washing Machine ─────────────────────────── -->
+    <div id="p2" class="product-section">
+      <div class="product-grid">
+        <div class="img-col">
+          <div class="main-img"><div class="img-label">👕<br/>Product Image<br/>Washing Machine 7kg</div></div>
+          <div class="thumb-strip">
+            <div class="thumb active">Img 1</div><div class="thumb">Img 2</div>
+            <div class="thumb">Img 3</div><div class="thumb">Img 4</div>
+          </div>
+        </div>
+        <div class="info-col">
+          <div class="product-name">[PRODUCT NAME] — Premium Quality, High Performance Fully Automatic Front Load Washing Machine Model X1 | 7 kg, 1400 RPM, Steam Wash</div>
+          <div class="brand-link"><a href="#">Visit the Brand Store</a></div>
+          <div class="rating-row">
+            <span class="stars-display">★★★★☆</span>
+            <a href="#reviews-section" class="rating-count">3.8 <span style="color:#555">out of 5</span> (584 ratings)</a>
+          </div>
+          <hr class="divider"/>
+          <div class="price-row">
+            <span class="price-mrp">M.R.P.: ₹52,990</span>
+            <span class="price-deal">₹34,490</span>
+            <span class="price-save">(-35%)</span>
+          </div>
+          <div class="tax-note">Inclusive of all taxes</div>
+          <div class="emi-note">EMI starts at ₹1,207. <a href="#">No Cost EMI available</a></div>
+          <div class="offers-grid">
+            <div class="offer-card"><div class="offer-title">No Cost EMI</div><div class="offer-detail">Up to ₹3,200 interest savings on select Credit Cards</div></div>
+            <div class="offer-card"><div class="offer-title">&#128176; Cashback</div><div class="offer-detail">Up to ₹1,035 as Amazon Pay Balance</div></div>
+            <div class="offer-card"><div class="offer-title">&#127970; Bank Offer</div><div class="offer-detail">Up to ₹1,500 discount on select Credit Cards</div></div>
+          </div>
+          <div class="service-strip">
+            <div class="service-item"><div class="service-icon">🔧</div><div>Installation Available</div></div>
+            <div class="service-item"><div class="service-icon">🛡️</div><div>3 Year Warranty</div></div>
+            <div class="service-item"><div class="service-icon">🔄</div><div>10 Days Replacement</div></div>
+            <div class="service-item"><div class="service-icon">🚚</div><div>Free Delivery</div></div>
+            <div class="service-item"><div class="service-icon">📦</div><div>Amazon Delivered</div></div>
+          </div>
+          <div class="variant-section">
+            <div class="variant-label">Colour: White</div>
+            <div class="swatch-row">
+              <div class="swatch active" style="background:#F5F5F5;" onclick="selectSwatch(this)"></div>
+              <div class="swatch" style="background:#E8E8E8;" onclick="selectSwatch(this)"></div>
+              <div class="swatch" style="background:#444;" onclick="selectSwatch(this)"></div>
+            </div>
+          </div>
+          <div class="variant-section">
+            <div class="variant-label">Capacity:</div>
+            <div class="size-row">
+              <div class="size-pill active" onclick="selectSize(this)">6 kg</div>
+              <div class="size-pill" onclick="selectSize(this)">7 kg</div>
+              <div class="size-pill" onclick="selectSize(this)">8 kg</div>
+            </div>
+          </div>
+        </div>
+        <div class="buy-col">
+          <div class="buybox">
+            <div class="exchange-option selected" onclick="selectExchange(this)">
+              <label><input type="radio" name="ex2" checked/> <span class="exchange-price">₹34,490</span></label>
+              <div class="exchange-sub">Without Exchange</div>
+            </div>
+            <div class="exchange-option" onclick="selectExchange(this)">
+              <label><input type="radio" name="ex2"/> <span class="exchange-price">Up to ₹2,800 off</span></label>
+              <div class="exchange-sub">With Exchange</div>
+            </div>
+            <div class="delivery-info">
+              <span class="free">FREE Delivery</span><br/>
+              <span class="addr">PESITM Shivamogga, NH206, Sagar Road, Shivamogga, 572004, Karnataka</span>
+            </div>
+            <div class="in-stock">In stock</div>
+            <div class="seller-info">Ships from: <strong>Amazon</strong><br/>Sold by: <a href="#">DAWNTECH ELECTRONICS PRIVATE LIMITED</a></div>
+            <div class="qty-row"><label>Qty: </label><select class="qty-select"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+            <button class="btn-atc" onclick="showToast('Added to cart!')">Add to Cart</button>
+            <button class="btn-buy" onclick="showToast('Redirecting to checkout...')">Buy Now</button>
+            <a href="#" class="wishlist-link">Add to Wish List</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PRODUCT 3: 4K TV ────────────────────────────────────── -->
+    <div id="p3" class="product-section">
+      <div class="product-grid">
+        <div class="img-col">
+          <div class="main-img"><div class="img-label">📺<br/>Product Image<br/>4K Smart TV 55"</div></div>
+          <div class="thumb-strip">
+            <div class="thumb active">Img 1</div><div class="thumb">Img 2</div>
+            <div class="thumb">Img 3</div><div class="thumb">Img 4</div>
+          </div>
+        </div>
+        <div class="info-col">
+          <div class="product-name">[PRODUCT NAME] — Premium Quality, High Performance 4K QLED Smart TV Model X1 | 55 Inch, Dolby Vision &amp; Atmos, Google TV</div>
+          <div class="brand-link"><a href="#">Visit the Brand Store</a></div>
+          <div class="rating-row">
+            <span class="stars-display">★★★★☆</span>
+            <a href="#reviews-section" class="rating-count">3.8 <span style="color:#555">out of 5</span> (584 ratings)</a>
+          </div>
+          <hr class="divider"/>
+          <div class="price-row">
+            <span class="price-mrp">M.R.P.: ₹89,990</span>
+            <span class="price-deal">₹54,999</span>
+            <span class="price-save">(-39%)</span>
+          </div>
+          <div class="tax-note">Inclusive of all taxes</div>
+          <div class="emi-note">EMI starts at ₹1,924. <a href="#">No Cost EMI available</a></div>
+          <div class="offers-grid">
+            <div class="offer-card"><div class="offer-title">No Cost EMI</div><div class="offer-detail">Up to ₹5,500 interest savings on select Credit Cards</div></div>
+            <div class="offer-card"><div class="offer-title">&#128176; Cashback</div><div class="offer-detail">Up to ₹1,650 as Amazon Pay Balance</div></div>
+            <div class="offer-card"><div class="offer-title">&#127970; Bank Offer</div><div class="offer-detail">Up to ₹1,500 discount on select Credit Cards</div></div>
+          </div>
+          <div class="service-strip">
+            <div class="service-item"><div class="service-icon">🔧</div><div>Installation Available</div></div>
+            <div class="service-item"><div class="service-icon">🛡️</div><div>3 Year Warranty</div></div>
+            <div class="service-item"><div class="service-icon">🔄</div><div>10 Days Replacement</div></div>
+            <div class="service-item"><div class="service-icon">🚚</div><div>Free Delivery</div></div>
+            <div class="service-item"><div class="service-icon">📦</div><div>Amazon Delivered</div></div>
+          </div>
+          <div class="variant-section">
+            <div class="variant-label">Colour: Jet Black</div>
+            <div class="swatch-row">
+              <div class="swatch active" style="background:#1a1a1a;" onclick="selectSwatch(this)"></div>
+              <div class="swatch" style="background:#8B7355;" onclick="selectSwatch(this)"></div>
+              <div class="swatch" style="background:#C0C0C0;" onclick="selectSwatch(this)"></div>
+            </div>
+          </div>
+          <div class="variant-section">
+            <div class="variant-label">Screen Size:</div>
+            <div class="size-row">
+              <div class="size-pill active" onclick="selectSize(this)">43"</div>
+              <div class="size-pill" onclick="selectSize(this)">55"</div>
+              <div class="size-pill" onclick="selectSize(this)">65"</div>
+            </div>
+          </div>
+        </div>
+        <div class="buy-col">
+          <div class="buybox">
+            <div class="exchange-option selected" onclick="selectExchange(this)">
+              <label><input type="radio" name="ex3" checked/> <span class="exchange-price">₹54,999</span></label>
+              <div class="exchange-sub">Without Exchange</div>
+            </div>
+            <div class="exchange-option" onclick="selectExchange(this)">
+              <label><input type="radio" name="ex3"/> <span class="exchange-price">Up to ₹4,200 off</span></label>
+              <div class="exchange-sub">With Exchange</div>
+            </div>
+            <div class="delivery-info">
+              <span class="free">FREE Delivery</span><br/>
+              <span class="addr">PESITM Shivamogga, NH206, Sagar Road, Shivamogga, 572004, Karnataka</span>
+            </div>
+            <div class="in-stock">In stock</div>
+            <div class="seller-info">Ships from: <strong>Amazon</strong><br/>Sold by: <a href="#">DAWNTECH ELECTRONICS PRIVATE LIMITED</a></div>
+            <div class="qty-row"><label>Qty: </label><select class="qty-select"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+            <button class="btn-atc" onclick="showToast('Added to cart!')">Add to Cart</button>
+            <button class="btn-buy" onclick="showToast('Redirecting to checkout...')">Buy Now</button>
+            <a href="#" class="wishlist-link">Add to Wish List</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PRODUCT 4: Refrigerator ────────────────────────────── -->
+    <div id="p4" class="product-section">
+      <div class="product-grid">
+        <div class="img-col">
+          <div class="main-img"><div class="img-label">❄️<br/>Product Image<br/>Refrigerator 265L</div></div>
+          <div class="thumb-strip">
+            <div class="thumb active">Img 1</div><div class="thumb">Img 2</div>
+            <div class="thumb">Img 3</div><div class="thumb">Img 4</div>
+          </div>
+        </div>
+        <div class="info-col">
+          <div class="product-name">[PRODUCT NAME] — Premium Quality, High Performance Double Door Frost-Free Refrigerator Model X1 | 265 L, 3 Star, Convertible</div>
+          <div class="brand-link"><a href="#">Visit the Brand Store</a></div>
+          <div class="rating-row">
+            <span class="stars-display">★★★★☆</span>
+            <a href="#reviews-section" class="rating-count">3.8 <span style="color:#555">out of 5</span> (584 ratings)</a>
+          </div>
+          <hr class="divider"/>
+          <div class="price-row">
+            <span class="price-mrp">M.R.P.: ₹38,490</span>
+            <span class="price-deal">₹26,990</span>
+            <span class="price-save">(-30%)</span>
+          </div>
+          <div class="tax-note">Inclusive of all taxes</div>
+          <div class="emi-note">EMI starts at ₹944. <a href="#">No Cost EMI available</a></div>
+          <div class="offers-grid">
+            <div class="offer-card"><div class="offer-title">No Cost EMI</div><div class="offer-detail">Up to ₹2,700 interest savings on select Credit Cards</div></div>
+            <div class="offer-card"><div class="offer-title">&#128176; Cashback</div><div class="offer-detail">Up to ₹810 as Amazon Pay Balance</div></div>
+            <div class="offer-card"><div class="offer-title">&#127970; Bank Offer</div><div class="offer-detail">Up to ₹1,500 discount on select Credit Cards</div></div>
+          </div>
+          <div class="service-strip">
+            <div class="service-item"><div class="service-icon">🔧</div><div>Installation Available</div></div>
+            <div class="service-item"><div class="service-icon">🛡️</div><div>3 Year Warranty</div></div>
+            <div class="service-item"><div class="service-icon">🔄</div><div>10 Days Replacement</div></div>
+            <div class="service-item"><div class="service-icon">🚚</div><div>Free Delivery</div></div>
+            <div class="service-item"><div class="service-icon">📦</div><div>Amazon Delivered</div></div>
+          </div>
+          <div class="variant-section">
+            <div class="variant-label">Colour: Inverter Grey</div>
+            <div class="swatch-row">
+              <div class="swatch active" style="background:#B0B0B0;" onclick="selectSwatch(this)"></div>
+              <div class="swatch" style="background:#D4EDDA;" onclick="selectSwatch(this)"></div>
+              <div class="swatch" style="background:#F5F5DC;" onclick="selectSwatch(this)"></div>
+            </div>
+          </div>
+          <div class="variant-section">
+            <div class="variant-label">Capacity:</div>
+            <div class="size-row">
+              <div class="size-pill active" onclick="selectSize(this)">236 L</div>
+              <div class="size-pill" onclick="selectSize(this)">265 L</div>
+              <div class="size-pill" onclick="selectSize(this)">308 L</div>
+            </div>
+          </div>
+        </div>
+        <div class="buy-col">
+          <div class="buybox">
+            <div class="exchange-option selected" onclick="selectExchange(this)">
+              <label><input type="radio" name="ex4" checked/> <span class="exchange-price">₹26,990</span></label>
+              <div class="exchange-sub">Without Exchange</div>
+            </div>
+            <div class="exchange-option" onclick="selectExchange(this)">
+              <label><input type="radio" name="ex4"/> <span class="exchange-price">Up to ₹2,200 off</span></label>
+              <div class="exchange-sub">With Exchange</div>
+            </div>
+            <div class="delivery-info">
+              <span class="free">FREE Delivery</span><br/>
+              <span class="addr">PESITM Shivamogga, NH206, Sagar Road, Shivamogga, 572004, Karnataka</span>
+            </div>
+            <div class="in-stock">In stock</div>
+            <div class="seller-info">Ships from: <strong>Amazon</strong><br/>Sold by: <a href="#">DAWNTECH ELECTRONICS PRIVATE LIMITED</a></div>
+            <div class="qty-row"><label>Qty: </label><select class="qty-select"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+            <button class="btn-atc" onclick="showToast('Added to cart!')">Add to Cart</button>
+            <button class="btn-buy" onclick="showToast('Redirecting to checkout...')">Buy Now</button>
+            <a href="#" class="wishlist-link">Add to Wish List</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /#main -->
+
+  <!-- ══════════════════ REVIEWS SECTION ══════════════════════════ -->
+  <div id="reviews-section">
+    <div class="reviews-header">Customer Reviews</div>
+    <div class="reviews-layout">
+      <div>
+        <div class="big-rating">3.8</div>
+        <div class="big-stars">★★★★☆</div>
+        <div class="rating-count-sub">out of 5 — 584 ratings</div>
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label">5 ★</span><div class="bar-outer"><div class="bar-inner" style="width:52%"></div></div><span>52%</span></div>
+          <div class="bar-row"><span class="bar-label">4 ★</span><div class="bar-outer"><div class="bar-inner" style="width:18%"></div></div><span>18%</span></div>
+          <div class="bar-row"><span class="bar-label">3 ★</span><div class="bar-outer"><div class="bar-inner" style="width:12%"></div></div><span>12%</span></div>
+          <div class="bar-row"><span class="bar-label">2 ★</span><div class="bar-outer"><div class="bar-inner" style="width:9%"></div></div><span>9%</span></div>
+          <div class="bar-row"><span class="bar-label">1 ★</span><div class="bar-outer"><div class="bar-inner" style="width:9%"></div></div><span>9%</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="live-counter"><strong id="counter-num">347</strong> reviews analyzed across <strong>4 platforms</strong></div>
+        <button class="write-review-btn" onclick="toggleReviewForm()">&#9998; Write a Review</button>
+        <div id="review-form-wrap">
+          <h4>Add a Review</h4>
+          <div class="form-field">
+            <label>Your Rating</label>
+            <div class="star-picker" id="star-picker">
+              <span class="star-pick" data-val="1" onclick="pickStar(1)">★</span>
+              <span class="star-pick" data-val="2" onclick="pickStar(2)">★</span>
+              <span class="star-pick" data-val="3" onclick="pickStar(3)">★</span>
+              <span class="star-pick" data-val="4" onclick="pickStar(4)">★</span>
+              <span class="star-pick" data-val="5" onclick="pickStar(5)">★</span>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="review-name">Your Name</label>
+            <input type="text" id="review-name" placeholder="Enter your name" />
+          </div>
+          <div class="form-field">
+            <label for="review-text">Write your review</label>
+            <textarea id="review-text" placeholder="Share your experience with this product..."></textarea>
+          </div>
+          <button class="btn-post" onclick="submitReview()">Post Review</button>
+        </div>
+        <div class="review-list" id="review-list">
+          <div class="review-card">
+            <div class="rc-name">Rajesh K. <span class="rc-stars">★★★★★</span><span class="rc-date">12 March 2025</span></div>
+            <div class="rc-text">"Excellent product, very happy with the build quality and performance. Delivery was fast too."</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-name">Priya M. <span class="rc-stars">★★★☆☆</span><span class="rc-date">28 February 2025</span></div>
+            <div class="rc-text">"Decent product but packaging was damaged when it arrived. The product itself works fine."</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-name">Arjun S. <span class="rc-stars">★★★★☆</span><span class="rc-date">15 January 2025</span></div>
+            <div class="rc-text">"Good value for money. Battery life is impressive. Customer support was helpful."</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-name">Sneha R. <span class="rc-stars">★★☆☆☆</span><span class="rc-date">3 January 2025</span></div>
+            <div class="rc-text">"Expected better quality at this price point. Build feels a bit cheap."</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-name">Mohammed A. <span class="rc-stars">★★★★★</span><span class="rc-date">20 December 2024</span></div>
+            <div class="rc-text">"Bilkul sahi product hai. Bahut achha kaam karta hai. Highly recommend!"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#detail-wrapper -->
+
+<!-- ══════════════════ FOOTER ═════════════════════════════════════════ -->
+<footer id="footer">
+  <div style="margin-bottom:8px;"><a href="#" onclick="backToSelection(); return false;">Back to top</a></div>
+  <div style="margin-bottom:8px; font-size:12px; color:#999;">
+    <a href="#">Conditions of Use &amp; Sale</a> | <a href="#">Privacy Notice</a> | <a href="#">Interest-Based Ads Notice</a>
+  </div>
+  <div>© 2025 Amazon.com, Inc. or its affiliates</div>
+</footer>
+
+<div id="toast"></div>
+
+<!-- ══════════════════ JAVASCRIPT ════════════════════════════════════ -->
+<script>
+  /* ──────────────────────────────────────────────────────────────────
+     CONFIG — swap these to change product/API target
+  ────────────────────────────────────────────────────────────────── */
+  const PRODUCT_ID    = "product_001";      // <-- product identifier
+  const PLATFORM      = "amazon";           // <-- platform name
+  const API_ENDPOINT  = "http://localhost:5000/api/reviews/ingest"; // <-- API URL
+  /* ────────────────────────────────────────────────────────────────── */
+
+  const PRODUCT_META = {
+    p1: { category: "Air Conditioners",  name: "Split AC 1.5 Ton — Model X1" },
+    p2: { category: "Washing Machines",  name: "Washing Machine 7 kg — Model X1" },
+    p3: { category: "Televisions",       name: "4K Smart TV 55\" — Model X1" },
+    p4: { category: "Refrigerators",     name: "Refrigerator 265 L — Model X1" }
+  };
+
+  let selectedStars = 0;
+  let reviewCounter = 347;
+
+  /* ── Select a product from the picker ─────────────────────────── */
+  function selectProduct(id) {
+    // Highlight the chosen card
+    document.querySelectorAll('.picker-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('card-' + id).classList.add('selected');
+
+    // Show scroll hint briefly
+    const arrow = document.getElementById('selection-arrow');
+    arrow.style.display = 'block';
+
+    // Show the right product section
+    document.querySelectorAll('.product-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    // Update breadcrumb
+    const meta = PRODUCT_META[id];
+    document.getElementById('detail-crumb-category').textContent = meta.category;
+    document.getElementById('detail-crumb-name').textContent = meta.name;
+
+    // Reveal the detail wrapper with animation
+    const wrapper = document.getElementById('detail-wrapper');
+    wrapper.style.display = 'block';
+    wrapper.style.animation = 'none';
+    wrapper.offsetHeight; // reflow to restart animation
+    wrapper.style.animation = '';
+
+    // Smooth scroll to detail
+    setTimeout(() => {
+      wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      arrow.style.display = 'none';
+    }, 80);
+  }
+
+  /* ── Back to product selection ─────────────────────────────────── */
+  function backToSelection() {
+    document.getElementById('detail-wrapper').style.display = 'none';
+    document.querySelectorAll('.picker-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('product-picker').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── Swatch & size selectors ───────────────────────────────────── */
+  function selectSwatch(el) {
+    el.closest('.swatch-row').querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function selectSize(el) {
+    el.closest('.size-row').querySelectorAll('.size-pill').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  /* ── Exchange option ───────────────────────────────────────────── */
+  function selectExchange(el) {
+    el.closest('.buybox').querySelectorAll('.exchange-option').forEach(s => {
+      s.classList.remove('selected');
+      s.querySelector('input').checked = false;
+    });
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+  }
+
+  /* ── Toast ─────────────────────────────────────────────────────── */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  /* ── Review form toggle ────────────────────────────────────────── */
+  function toggleReviewForm() {
+    const wrap = document.getElementById('review-form-wrap');
+    wrap.style.display = wrap.style.display === 'block' ? 'none' : 'block';
+    if (wrap.style.display === 'block') wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* ── Star picker ───────────────────────────────────────────────── */
+  function pickStar(val) {
+    selectedStars = val;
+    document.querySelectorAll('.star-pick').forEach(s => {
+      s.classList.toggle('lit', parseInt(s.dataset.val) <= val);
+    });
+  }
+
+  /* ── Submit review ─────────────────────────────────────────────── */
+  function submitReview() {
+    const name = document.getElementById('review-name').value.trim();
+    const text = document.getElementById('review-text').value.trim();
+    if (!name) { alert('Please enter your name.'); return; }
+    if (!text) { alert('Please write a review.'); return; }
+    if (selectedStars === 0) { alert('Please select a star rating.'); return; }
+
+    const ratingVal = selectedStars;
+    const now = new Date();
+    const isoTimestamp = now.toISOString();
+    const starStr = '★'.repeat(ratingVal) + '☆'.repeat(5 - ratingVal);
+
+    const list = document.getElementById('review-list');
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    card.innerHTML = `
+      <div class="rc-name">${escapeHtml(name)} <span class="rc-stars">${starStr}</span><span class="rc-date">just now</span></div>
+      <div class="rc-text">"${escapeHtml(text)}"</div>
+    `;
+    list.insertBefore(card, list.firstChild);
+
+    // Reset form
+    document.getElementById('review-name').value = '';
+    document.getElementById('review-text').value = '';
+    selectedStars = 0;
+    document.querySelectorAll('.star-pick').forEach(s => s.classList.remove('lit'));
+    document.getElementById('review-form-wrap').style.display = 'none';
+
+    const userId = 'guest_' + Math.floor(1000 + Math.random() * 9000);
+    const payload = {
+      product_id: PRODUCT_ID,      // <-- CONFIG
+      platform:   PLATFORM,        // <-- CONFIG
+      review_text: text,
+      transcript: null,
+      rating: ratingVal,
+      user_id: userId,
+      media_type: "none",
+      timestamp: isoTimestamp
+    };
+
+    fetch(API_ENDPOINT, {          // <-- CONFIG
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(res => {
+      if (res.ok) {
+        reviewCounter++;
+        document.getElementById('counter-num').textContent = reviewCounter;
+      }
+    })
+    .catch(() => { /* silently ignore */ });
+  }
+
+  /* ── HTML escape ───────────────────────────────────────────────── */
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+</body>
+</html>
