@@ -18,6 +18,7 @@ router.post('/ingest', async (req, res) => {
       transcript,
       rating,
       user_id,
+      email,
       media_type = 'none',
       timestamp,
     } = req.body;
@@ -45,7 +46,10 @@ router.post('/ingest', async (req, res) => {
 
     // Trigger pipeline asynchronously — don't block the response
     const runPipeline = require('../pipeline');
-    runPipeline(review.id).catch(err => {
+    runPipeline(review.id, {
+      fromIngest: true,
+      respondentEmail: typeof email === 'string' ? email.trim() : email,
+    }).catch(err => {
       console.error(`Pipeline error for review ${review.id}:`, err.message);
     });
 

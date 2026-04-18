@@ -16,7 +16,7 @@ const timeseries = require('./timeseries');
 const confidence = require('./confidence');
 const feedback = require('./feedback');
 
-async function runPipeline(reviewId) {
+async function runPipeline(reviewId, options = {}) {
   const review = await Review.findByPk(reviewId);
   if (!review) throw new Error(`Review ${reviewId} not found`);
 
@@ -42,6 +42,21 @@ async function runPipeline(reviewId) {
     if (!trustResult.pass) {
       await review.update({ status: 'flagged', flag_reason: trustResult.reason });
       console.log(`[Pipeline] Review flagged: ${trustResult.reason}`);
+      // Still send adaptive survey for ingest (user expects email) unless exact duplicate spam
+      const dupExact = (trustResult.reason || '').includes('Exact duplicate');
+      if (options.fromIngest && !dupExact) {
+        const respondentEmail = feedback.pickRespondentEmail(review.user_id, options.respondentEmail);
+        if (respondentEmail) {
+          feedback.runAdaptiveFeedback({
+            review: { ...review.toJSON(), normalized_text: normalizeResult.normalized_text },
+            normalizedText: normalizeResult.normalized_text,
+            features: {},
+            productName: feedback.getProductName(review.product_id),
+            respondentEmail,
+          });
+          console.log(`[Pipeline] Stage 7 scheduled (post-flag) — survey email to ${respondentEmail}`);
+        }
+      }
       return;
     }
     console.log(`[Pipeline] Stage 2 done — passed trust filter`);
@@ -90,10 +105,21 @@ async function runPipeline(reviewId) {
     const confResult = await confidence.process(review.product_id);
     console.log(`[Pipeline] Stage 6 done — ${confResult.insights_updated} insights updated`);
 
-    // Stage 7 — Feedback (only for high-confidence negative issues)
-    if (confResult.top_issues && confResult.top_issues.some(i => i.confidence > 0.6)) {
-      const fbResult = await feedback.process(review.toJSON(), extractResult);
-      console.log(`[Pipeline] Stage 7 done — ${fbResult.surveys.length} surveys generated`);
+    // Stage 7 — Adaptive Feedback (ingest only; async, non-blocking)
+    if (options.fromIngest) {
+      const respondentEmail = feedback.pickRespondentEmail(review.user_id, options.respondentEmail);
+      if (respondentEmail) {
+        feedback.runAdaptiveFeedback({
+          review: review.toJSON(),
+          normalizedText: normalizeResult.normalized_text,
+          features: extractResult.features,
+          productName: feedback.getProductName(review.product_id),
+          respondentEmail,
+        });
+        console.log(`[Pipeline] Stage 7 scheduled — adaptive feedback email to ${respondentEmail}`);
+      } else {
+        console.log(`[Pipeline] Stage 7 skipped — no respondent email`);
+      }
     }
 
     console.log(`[Pipeline] Complete for review ${reviewId}`);

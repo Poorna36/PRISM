@@ -77,10 +77,10 @@ router.post('/run', async (req, res) => {
     sendEvent('stage', { stage: 6, name: 'Confidence Scoring', status: 'done', result: confResult });
     await delay(400);
 
-    // Stage 7 — Feedback
-    sendEvent('stage', { stage: 7, name: 'Adaptive Feedback', status: 'running' });
-    const fbResult = await feedback.processDemo(review, extractResult);
-    sendEvent('stage', { stage: 7, name: 'Adaptive Feedback', status: 'done', result: fbResult });
+    // Stage 7 — Adaptive Feedback (SSE: survey sent; live summary via Socket.io survey:summary)
+    await delay(400);
+    const stage7Payload = await feedback.buildDemoStage7Payload(review, normalizeResult, extractResult);
+    sendEvent('stage', stage7Payload);
 
     sendEvent('done', { insight_delta: { health_score: confResult?.health_score ?? null } });
   } catch (err) {

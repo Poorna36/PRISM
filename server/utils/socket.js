@@ -25,8 +25,14 @@ function emitAlert(alert) {
   }
 }
 
+function emitSurveySummary(payload) {
+  if (io) {
+    io.emit('survey:summary', payload);
+  }
+}
+
 function getIO() {
   return io;
 }
 
-module.exports = { initSocket, emitAlert, getIO };
+module.exports = { initSocket, emitAlert, emitSurveySummary, getIO };

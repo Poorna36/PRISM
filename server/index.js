@@ -17,6 +17,7 @@ const dashboardRoutes = require('./routes/dashboard');
 const alertRoutes = require('./routes/alerts');
 const demoRoutes = require('./routes/demo');
 const reportRoutes = require('./routes/reports');
+const surveyRoutes = require('./routes/survey');
 
 const app = express();
 const server = http.createServer(app);
@@ -36,6 +37,7 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Auth routes — no middleware (login/logout must be unprotected)
@@ -43,6 +45,9 @@ app.use('/api/auth', authRoutes);
 
 // Review ingest — no auth (simulation pages call this without JWT)
 app.use('/api/reviews', reviewRoutes);
+
+// Survey (email + browser fallback) — no auth
+app.use('/api/survey', surveyRoutes);
 
 // Protected routes — require valid JWT
 app.use('/api/dashboard', authMiddleware, dashboardRoutes);
