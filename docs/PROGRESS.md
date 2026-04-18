@@ -11,9 +11,7 @@
 _Update this after every session. Replace previous entry._
 
 ```
-Date: 2026-04-17
-Done: Backend foundation (Express + SQLite + JWT auth + all routes), full 7-stage pipeline (normalize → trust → extract → graph → timeseries → confidence → feedback), embedding utility, Socket.io setup, PDF report generator (utils/pdf.js), reports route wired to actual PDF generation, fixed auth/me bug (was missing middleware), server verified (27/27 modules load, DB syncs, 17/17 API tests pass)
-Next: Frontend — design together with user, then build React dashboard
+
 ```
 
 ---
@@ -32,6 +30,7 @@ Next: Frontend — design together with user, then build React dashboard
 ## BACKEND (`server/`)
 
 ### Setup
+<<<<<<< HEAD
 - [x] `package.json` with deps: express, sequelize, sqlite3, socket.io, jsonwebtoken, cookie-parser, axios, @xenova/transformers, natural, uuid
 - [x] `index.js` — Express app, middleware, route mounting, Socket.io init, SQLite sync, embedding preload
 - [x] DB schema created via Sequelize sync (Reviews, GraphNodes, GraphEdges, Insights, Alerts tables)
@@ -81,6 +80,32 @@ Next: Frontend — design together with user, then build React dashboard
 - [x] SQLite DB syncs and creates all tables
 - [x] Server binds to port successfully
 - [x] 17/17 API integration tests pass (auth, protected routes, review ingest)
+=======
+- [ ] `package.json` with deps: express, sequelize/prisma, pg, redis, socket.io, axios, puppeteer
+- [ ] `index.js` — Express app, middleware, route mounting, Socket.io init
+- [ ] DB schema created and migrated (Reviews, GraphNodes, Insights, Alerts, SurveyResponses tables)
+- [ ] `.env.example` committed (no real keys)
+
+### Routes
+- [ ] `routes/reviews.js` — POST /api/reviews/ingest
+- [ ] `routes/dashboard.js` — GET /api/dashboard/:productId, GET /api/dashboard/all
+- [ ] `routes/alerts.js` — GET /api/alerts
+- [ ] `routes/demo.js` — POST /api/demo/run (SSE streaming)
+- [ ] `routes/reports.js` — POST /api/reports/generate, GET /reports/:filename
+
+### Pipeline
+- [ ] `pipeline/normalize.js` — Sarvam AI integration
+- [ ] `pipeline/trust.js` — dedup hash check, cosine similarity near-dedup, spam heuristics
+- [ ] `pipeline/extract.js` — feature tagging + sentiment scoring for 7 features
+- [ ] `pipeline/graph.js` — node creation, edge weight formula, cluster classification (systemic/batch/isolated)
+- [ ] `pipeline/timeseries.js` — weekly aggregation, trend direction, spike detection, what_changed_this_week
+- [ ] `pipeline/confidence.js` — confidence formula, level mapping, recommendation action map, priority ranking
+- [ ] `pipeline/feedback.js` — Gemini API integration, survey dispatch (simulated), response ingestion
+
+### Utils
+- [ ] `utils/pdf.js` — Puppeteer PDF renderer, 5-section structure
+- [ ] `utils/socket.js` — Socket.io setup, alert:new emitter
+>>>>>>> main
 
 ---
 
@@ -89,12 +114,20 @@ Next: Frontend — design together with user, then build React dashboard
 ### Setup
 - [ ] Vite + React project initialized
 - [ ] Tailwind CSS configured
+<<<<<<< HEAD
 - [ ] Dependencies: recharts, d3, framer-motion, socket.io-client, zustand
 - [ ] `src/api/index.js` — all fetch functions wrapping backend endpoints
 
 ### Pages
 - [ ] `AuthPage.jsx` — login page (working)
 - [ ] `MainPage.jsx` — single page with component stubs for frontend team
+=======
+- [ ] Dependencies: recharts, d3, framer-motion, socket.io-client, zustand (or redux)
+- [ ] `src/api/index.js` — all fetch functions wrapping backend endpoints
+
+### Pages
+- [ ] `MainPage.jsx` — single page, contains all sections including Demo Center as final section. Exact section order/layout TBD by frontend team during build.
+>>>>>>> main
 
 ### Dashboard Components
 - [ ] `HealthScoreCard`
