@@ -60,6 +60,9 @@ app.use('/api/settings', authMiddleware, settingsRoutes);
 // Static files for reports
 app.use('/reports', express.static(path.join(__dirname, 'reports')));
 
+// Serve simulation pages (HTML, CSS, JS)
+app.use('/simulation', express.static(path.join(__dirname, '..', 'simulation')));
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

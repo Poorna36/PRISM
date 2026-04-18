@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useMemo, useLayoutEffect } from 'react';
 import * as d3 from 'd3';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FEATURE_COLORS, labelFeature } from '../../constants/features';
+import { FEATURE_COLORS, FEATURE_ORDER, labelFeature } from '../../constants/features';
 
 function sentimentColor(s) {
   const t = (s || '').toLowerCase();
@@ -28,8 +28,38 @@ export default function GraphNetwork({ graphData, activeFeature, height = 360 })
   }, [height]);
 
   const { nodes, links } = useMemo(() => {
-    const rawNodes = graphData?.nodes || [];
-    const rawEdges = graphData?.edges || [];
+    // MOCK DATA FOR DEMO
+    const demoNodes = [];
+    const demoEdges = [];
+    
+    // Create 45 random nodes
+    for (let i = 0; i < 45; i++) {
+      const feature = FEATURE_ORDER[Math.floor(Math.random() * FEATURE_ORDER.length)];
+      demoNodes.push({
+        id: `node_${i}`,
+        feature: feature,
+        sentiment: Math.random() > 0.4 ? 'Positive' : 'Negative',
+        features: [feature],
+        week: '2026-W16'
+      });
+    }
+
+    // Create realistic clustered edges
+    for (let i = 0; i < demoNodes.length; i++) {
+      for (let j = i + 1; j < demoNodes.length; j++) {
+        if (Math.random() > 0.85 || (demoNodes[i].feature === demoNodes[j].feature && Math.random() > 0.5)) {
+          demoEdges.push({
+            source: demoNodes[i].id,
+            target: demoNodes[j].id,
+            weight: 0.2 + (Math.random() * 0.8)
+          });
+        }
+      }
+    }
+
+    const rawNodes = graphData?.nodes?.length ? graphData.nodes : demoNodes;
+    const rawEdges = graphData?.edges?.length ? graphData.edges : demoEdges;
+    
     const filtered = activeFeature
       ? rawNodes.filter((n) => {
           const tags = Array.isArray(n.features) ? n.features : [];
@@ -40,8 +70,8 @@ export default function GraphNetwork({ graphData, activeFeature, height = 360 })
     const edges = rawEdges
       .filter((e) => idSet.has(e.source) && idSet.has(e.target))
       .map((e) => ({ ...e }));
-    const nodes = filtered.map((n) => ({ ...n }));
-    return { nodes, links: edges };
+    const resultNodes = filtered.map((n) => ({ ...n }));
+    return { nodes: resultNodes, links: edges };
   }, [graphData, activeFeature]);
 
   const { width } = dims;

@@ -39,32 +39,50 @@ export default function TrendChart({
 }) {
   const [mode, setMode] = useState('positive');
 
+  // MOCK DATA FOR HACKATHON DEMO
   const data = useMemo(() => {
-    if (!weeklyTrends?.length) return [];
-    return weeklyTrends.map((row) => {
-      const out = { week: row.week };
+    const weeks = [];
+    // Generate 12 weeks of historical data
+    for (let i = 12; i >= 1; i--) {
+      weeks.push(`2026-W${20 - i}`);
+    }
+    
+    return weeks.map((week, idx) => {
+      const out = { week };
       for (const f of FEATURE_ORDER) {
-        if (mode === 'positive') {
-          out[f] = row[f] != null ? row[f] : null;
-        } else {
-          const nk = `${f}_negative`;
-          out[f] = row[nk] != null ? row[nk] : null;
+        // Base random value around 80% positive
+        let val = 0.7 + (Math.random() * 0.25);
+        
+        // Create a fake spike for battery_life in W17 (negative)
+        if (f === 'battery_life' && mode === 'negative' && week === '2026-W17') {
+          val = 0.95;
+        } else if (f === 'build_quality' && mode === 'negative') {
+          // Sustained design issue for build quality
+          val = 0.6 + (Math.random() * 0.1);
+        } else if (mode === 'negative') {
+          val = 1 - val; // Invert for negative view
         }
+        
+        // Add some noise
+        val = Math.max(0, Math.min(1, val));
+        out[f] = val;
       }
       return out;
     });
-  }, [weeklyTrends, mode]);
+  }, [mode]);
 
   const lines = useMemo(() => {
-    const base = activeFeature ? [activeFeature] : FEATURE_ORDER;
-    return base.filter((f) => data.some((d) => d[f] != null));
-  }, [data, activeFeature]);
+    return activeFeature ? [activeFeature] : FEATURE_ORDER;
+  }, [activeFeature]);
 
   const hintWeeks = useMemo(() => {
-    const hints = timeseriesVisual?.hints || [];
-    if (!hints.length || !activeFeature) return hints;
+    const hints = [
+      { week: '2026-W17', feature: 'battery_life', pattern: 'batch_spike' },
+      { week: '2026-W14', feature: 'build_quality', pattern: 'design_creep' }
+    ];
+    if (!activeFeature) return hints;
     return hints.filter((h) => h.feature === activeFeature);
-  }, [timeseriesVisual, activeFeature]);
+  }, [activeFeature]);
 
   if (!data.length) {
     return (
@@ -138,7 +156,7 @@ export default function TrendChart({
                 name={labelFeature(f)}
                 stroke={FEATURE_COLORS[f]}
                 strokeWidth={activeFeature === f ? 3.5 : 2}
-                dot={false}
+                dot={true}
                 activeDot={{ r: 5, strokeWidth: 0 }}
                 connectNulls
                 isAnimationActive

@@ -7,7 +7,43 @@ function typeLabel(issue) {
 }
 
 export default function IssueList({ issues }) {
-  if (!issues?.length) {
+  // MOCK DATA FOR DEMO
+  const demoIssues = [
+    {
+      id: 'mock_1',
+      feature: 'battery_life',
+      issue_type: 'Batch Issue',
+      severity: 'Critical',
+      affected_pct: 0.35,
+      recommendation: 'Immediate investigation required. A localized batch of batteries (likely from recent manufacturing run) is draining within 60 minutes. Initiate recall process for affected serial numbers.',
+      confidence_level: 'high',
+      confidence: 0.92
+    },
+    {
+      id: 'mock_2',
+      feature: 'build_quality',
+      issue_type: 'Design Creep',
+      severity: 'Medium',
+      affected_pct: 0.22,
+      recommendation: 'Material fatigue reported consistently over the last 100 days. Users describe the plastic housing as feeling "cheap". Consider upgrading polymer grade in next hardware revision.',
+      confidence_level: 'high',
+      confidence: 0.88
+    },
+    {
+      id: 'mock_3',
+      feature: 'customer_support',
+      issue_type: 'Service SLA',
+      severity: 'Low',
+      affected_pct: 0.08,
+      recommendation: 'Minor delays noted in ticket resolution for replacement requests. Ensure support staff capacity meets recent spike in battery complaints.',
+      confidence_level: 'medium',
+      confidence: 0.65
+    }
+  ];
+
+  const displayIssues = issues?.length ? issues : demoIssues;
+
+  if (!displayIssues?.length) {
     return (
       <p className="text-sm text-slate-500">
         No ranked issues yet — insights appear as clusters stabilize in the graph pipeline.
@@ -19,7 +55,7 @@ export default function IssueList({ issues }) {
     <div>
       <h3 className="sr-only">Prioritized recommendations</h3>
       <ul className="space-y-3">
-        {issues.map((issue, i) => (
+        {displayIssues.map((issue, i) => (
           <motion.li
             key={issue.id || issue.issue_id || i}
             layout
