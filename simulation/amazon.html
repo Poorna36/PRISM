@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amazon.in - Paralink Products</title>
+  <link rel="stylesheet" href="./simulation.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,sans-serif;font-size:14px;color:#0F1111;background:#EAEDED;min-width:320px}
+    a{color:#007185;text-decoration:none}a:hover{color:#C7511F;text-decoration:underline}
+    #navbar{background:#131921;color:#fff;display:flex;align-items:center;padding:8px 16px;gap:8px;position:sticky;top:0;z-index:100}
+    .logo-text{font-size:22px;font-weight:900;color:#FF9900;cursor:pointer}.logo-text span{color:#fff;font-size:12px;vertical-align:super}
+    .search-wrap{flex:1;display:flex;border-radius:4px;overflow:hidden;height:40px}
+    .search-input{flex:1;border:none;outline:none;padding:0 10px;font-size:14px}
+    .search-btn{background:#febd69;border:none;padding:0 14px;cursor:pointer;font-size:18px;color:#333}
+    .nav-actions{display:flex;align-items:center;gap:4px}
+    .nav-item{border:1px solid transparent;border-radius:2px;padding:4px 8px;cursor:pointer;color:#fff;white-space:nowrap;font-size:12px}
+    .nav-item:hover{border-color:#fff}
+    #sub-navbar{background:#232F3E;color:#fff;padding:6px 16px;display:flex;gap:18px;font-size:13px}
+    .sub-nav-item{color:#fff;cursor:pointer;padding:2px 4px}
+    #breadcrumb{background:#fff;padding:8px 20px;font-size:12px;color:#555;border-bottom:1px solid #ddd}
+    #product-picker{max-width:1280px;margin:24px auto;padding:0 20px}
+    .picker-heading{font-size:22px;font-weight:bold;margin-bottom:6px}
+    .picker-sub{font-size:13px;color:#555;margin-bottom:20px}
+    .picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+    .picker-card{background:#fff;border:2px solid #DDD;border-radius:8px;padding:16px;cursor:pointer;text-align:center;transition:all .2s;position:relative}
+    .picker-card:hover{border-color:#FF9900;box-shadow:0 4px 16px rgba(0,0,0,.12);transform:translateY(-3px)}
+    .picker-card.selected{border-color:#FF9900;box-shadow:0 0 0 3px rgba(255,153,0,.3)}
+    .picker-card .badge{position:absolute;top:10px;right:10px;background:#CC0C39;color:#fff;font-size:11px;font-weight:bold;padding:2px 7px;border-radius:3px}
+    .picker-card img{width:100%;height:160px;object-fit:cover;border-radius:6px;margin-bottom:12px}
+    .picker-name{font-size:15px;font-weight:bold;margin-bottom:4px}
+    .picker-category{font-size:12px;color:#555;margin-bottom:8px}
+    .picker-price{font-size:18px;font-weight:bold;margin-bottom:2px}
+    .picker-mrp{font-size:12px;color:#888;text-decoration:line-through;margin-right:6px}
+    .picker-save{font-size:12px;color:#CC0C39;font-weight:bold}
+    .btn-view{margin-top:10px;width:100%;background:#febd69;border:none;border-radius:20px;padding:8px;font-size:13px;font-weight:bold;cursor:pointer}
+    .btn-view:hover{background:#f3a847}
+    #detail-wrapper{display:none;animation:slideDown .35s ease}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
+    #main{background:#fff;max-width:1280px;margin:0 auto}
+    .product-section{display:none;padding:20px}
+    .product-section.active{display:block}
+    .product-grid{display:grid;grid-template-columns:380px 1fr 280px;gap:20px}
+    @media(max-width:900px){.product-grid{grid-template-columns:1fr}}
+    .main-img{width:100%;height:350px;background:#F0F0F0;display:flex;align-items:center;justify-content:center;border:1px solid #ddd;border-radius:4px;overflow:hidden}
+    .main-img img{width:100%;height:100%;object-fit:cover}
+    .product-name{font-size:20px;line-height:1.4;margin-bottom:8px}
+    .brand-link{font-size:13px;margin-bottom:6px}
+    .rating-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+    .stars-display{color:#FF9900;font-size:16px}
+    .divider{border:none;border-top:1px solid #DDD;margin:10px 0}
+    .price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+    .price-mrp{font-size:14px;color:#555;text-decoration:line-through}
+    .price-deal{font-size:26px;font-weight:bold}
+    .price-save{font-size:14px;color:#CC0C39;font-weight:bold}
+    .tax-note{font-size:12px;color:#555;margin-bottom:6px}
+    .offers-grid{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
+    .offer-card{border:1px solid #DDD;border-radius:4px;padding:8px 10px;flex:1;font-size:12px;background:#f9f9f9;min-width:150px}
+    .offer-card .offer-title{font-weight:bold;margin-bottom:3px;font-size:13px}
+    .offer-card .offer-detail{color:#555}
+    .service-strip{display:flex;gap:14px;margin:12px 0;flex-wrap:wrap}
+    .service-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;text-align:center;width:68px}
+    .service-icon{font-size:22px}
+    .buybox{border:1px solid #DDD;border-radius:4px;padding:16px}
+    .in-stock{color:#007600;font-size:16px;margin-bottom:6px}
+    .seller-info{font-size:12px;color:#555;margin-bottom:10px}
+    .btn-atc,.btn-buy{width:100%;padding:10px;border:none;border-radius:20px;font-size:14px;font-weight:500;cursor:pointer;margin-bottom:8px}
+    .btn-atc{background:#febd69;color:#0F1111}.btn-buy{background:#FFA41C;color:#0F1111}
+    .btn-atc:hover,.btn-buy:hover{filter:brightness(0.93)}
+    #back-to-selection{max-width:1280px;margin:0 auto;padding:10px 20px;background:#fff}
+    #back-to-selection button{background:none;border:none;color:#007185;font-size:13px;cursor:pointer}
+    #reviews-section{background:#fff;max-width:1280px;margin:16px auto 0;padding:24px 20px;border-top:8px solid #EAEDED}
+    .reviews-header{font-size:22px;font-weight:bold;margin-bottom:16px}
+    .live-counter{font-size:13px;color:#555;margin-bottom:14px;padding:8px 12px;background:#F0F9F0;border-left:3px solid #007600;border-radius:2px}
+    .live-counter strong{color:#007600}
+    #toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#232F3E;color:#fff;padding:12px 24px;border-radius:4px;font-size:14px;opacity:0;transition:opacity .3s,transform .3s;z-index:999;pointer-events:none}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    #footer{background:#232F3E;color:#DDD;text-align:center;padding:20px;font-size:13px;margin-top:30px}
+  </style>
+</head>
+<body>
+<nav id="navbar">
+  <span class="logo-text" onclick="backToSelection()">amazon<span>.in</span></span>
+  <div class="search-wrap">
+    <input class="search-input" type="text" placeholder="Search Amazon.in" />
+    <button class="search-btn">&#128269;</button>
+  </div>
+  <div class="nav-actions">
+    <div class="nav-item">Hello, Sign in<br><b>Account &amp; Lists</b></div>
+    <div class="nav-item">Returns<br><b>&amp; Orders</b></div>
+    <div class="nav-item">&#128722; <b>Cart</b></div>
+  </div>
+</nav>
+<div id="sub-navbar">
+  <span class="sub-nav-item">&#9776; All</span>
+  <span class="sub-nav-item">Today's Deals</span>
+  <span class="sub-nav-item">Electronics</span>
+  <span class="sub-nav-item">Home &amp; Kitchen</span>
+  <span class="sub-nav-item">Gaming</span>
+  <span class="sub-nav-item">Prime</span>
+</div>
+<div id="breadcrumb"><a href="#">Electronics</a> <span>›</span> <a href="#">Paralink Store</a></div>
+
+<!-- ═══ PRODUCT PICKER ═══ -->
+<div id="product-picker">
+  <div class="picker-heading">Paralink Products on Amazon</div>
+  <div class="picker-sub">Choose a product below to view full details, pricing, and reviews.</div>
+  <div class="picker-grid" id="picker-grid"></div>
+</div>
+
+<!-- ═══ DETAIL WRAPPER ═══ -->
+<div id="detail-wrapper">
+  <div id="back-to-selection"><button onclick="backToSelection()">&#8592; Back to all products</button></div>
+  <div id="main"></div>
+  <div id="reviews-section">
+    <div class="reviews-header">Customer Reviews</div>
+    <div class="live-counter"><span class="prism-live-counter" id="counter-num">0 reviews analyzed across 4 platforms</span></div>
+    <div id="prism-product-panel" style="margin:16px 0"></div>
+  </div>
+</div>
+
+<footer id="footer">
+  <div style="margin-bottom:8px"><a href="#" onclick="backToSelection();return false" style="color:#DDD">Back to top</a></div>
+  <div>© 2026 Amazon.com, Inc. — PRISM Hackathon Simulation</div>
+</footer>
+<div id="toast"></div>
+
+<script src="./seed-data.js"></script>
+<script src="./reviews-data.js"></script>
+<script src="./simulation.js"></script>
+<script>
+const PLATFORM = 'amazon';
+const API_ENDPOINT = 'http://localhost:5000/api/reviews/ingest';
+
+const PRODUCTS = [
+  {
+    id: 'prod_001', name: 'Paralink Nord 3 Pro', category: 'True Wireless Earbuds', emoji: '🎧',
+    fullName: 'Paralink Nord 3 Pro — True Wireless Earbuds | Hybrid ANC 40dB, 12mm Titanium Drivers, BT 5.3, 32hr Battery, IP55',
+    price: 3499, mrp: 6999, discount: 50, emi: 292,
+    img: 'https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=600&h=400&fit=crop',
+    services: ['🛡️ 1 Year Warranty','🔄 7 Day Replacement','🚚 Free Delivery','📦 Amazon Delivered'],
+    offers: [{t:'No Cost EMI',d:'Up to ₹583 savings'},{t:'💰 Cashback',d:'Up to ₹105 Amazon Pay'},{t:'🏦 Bank Offer',d:'10% off on HDFC Cards'}]
+  },
+  {
+    id: 'prod_002', name: 'Paralink Refrigerator', category: 'Refrigerators', emoji: '❄️',
+    fullName: 'Paralink Refrigerator — 265L Double Door Frost-Free | Digital Inverter, Convertible 5-in-1, 3 Star',
+    price: 26990, mrp: 38490, discount: 30, emi: 944,
+    img: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&h=400&fit=crop',
+    services: ['🔧 Installation','🛡️ 3 Year Warranty','🔄 10 Day Replacement','🚚 Free Delivery','📦 Amazon Delivered'],
+    offers: [{t:'No Cost EMI',d:'Up to ₹2,700 savings'},{t:'💰 Cashback',d:'Up to ₹810 Amazon Pay'},{t:'🏦 Bank Offer',d:'Up to ₹1,500 off'}]
+  },
+  {
+    id: 'prod_003', name: 'Paralink Gamepad Pro', category: 'Gaming Controllers', emoji: '🎮',
+    fullName: 'Paralink Gamepad Pro — Wireless Gaming Controller | Hall Effect Triggers, Dual Vibration, RGB, BT 5.0 + 2.4GHz',
+    price: 4999, mrp: 7999, discount: 38, emi: 417,
+    img: 'https://images.unsplash.com/photo-1592840496694-26d035b52b48?w=600&h=400&fit=crop',
+    services: ['🛡️ 1 Year Warranty','🔄 7 Day Replacement','🚚 Free Delivery','📦 Amazon Delivered'],
+    offers: [{t:'No Cost EMI',d:'Up to ₹416 savings'},{t:'💰 Cashback',d:'Up to ₹150 Amazon Pay'},{t:'🏦 Bank Offer',d:'5% off on Axis Cards'}]
+  },
+  {
+    id: 'prod_004', name: 'Paralink 25 Inch Monitor', category: 'Gaming Monitors', emoji: '🖥️',
+    fullName: 'Paralink 25 Inch Monitor — FHD IPS 165Hz 1ms Gaming | HDR400, FreeSync Premium, USB-C 65W, Height Adjustable',
+    price: 14999, mrp: 24999, discount: 40, emi: 1250,
+    img: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop',
+    services: ['🔧 Installation','🛡️ 3 Year Warranty','🔄 10 Day Replacement','🚚 Free Delivery','📦 Amazon Delivered'],
+    offers: [{t:'No Cost EMI',d:'Up to ₹1,250 savings'},{t:'💰 Cashback',d:'Up to ₹450 Amazon Pay'},{t:'🏦 Bank Offer',d:'Up to ₹1,500 off'}]
+  }
+];
+
+let currentProductId = PRODUCTS[0].id;
+
+function fmt(n){ return new Intl.NumberFormat('en-IN').format(n); }
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Build picker cards
+function buildPicker(){
+  const grid = document.getElementById('picker-grid');
+  grid.innerHTML = PRODUCTS.map(p => `
+    <div class="picker-card" id="card-${p.id}" onclick="selectProduct('${p.id}')">
+      <div class="badge">-${p.discount}%</div>
+      <img src="${p.img}" alt="${p.name}" onerror="this.outerHTML='<div style=font-size:52px;padding:20px>${p.emoji}</div>'">
+      <div class="picker-name">${p.name}</div>
+      <div class="picker-category">${p.category}</div>
+      <div><span class="picker-mrp">₹${fmt(p.mrp)}</span><span class="picker-price">₹${fmt(p.price)}</span></div>
+      <div class="picker-save">Save ₹${fmt(p.mrp - p.price)}</div>
+      <button class="btn-view">View Details</button>
+    </div>
+  `).join('');
+}
+
+// Build detail sections
+function buildDetails(){
+  const main = document.getElementById('main');
+  main.innerHTML = PRODUCTS.map(p => `
+    <div id="${p.id}" class="product-section">
+      <div class="product-grid">
+        <div>
+          <div class="main-img"><img src="${p.img}" alt="${p.name}"></div>
+        </div>
+        <div>
+          <div class="product-name">${p.fullName}</div>
+          <div class="brand-link"><a href="#">Visit the Paralink Store</a></div>
+          <div class="rating-row"><span class="stars-display">★★★★☆</span> <span style="color:#555;font-size:13px">4.1 out of 5</span></div>
+          <hr class="divider"/>
+          <div class="price-row">
+            <span class="price-mrp">M.R.P.: ₹${fmt(p.mrp)}</span>
+            <span class="price-deal">₹${fmt(p.price)}</span>
+            <span class="price-save">(-${p.discount}%)</span>
+          </div>
+          <div class="tax-note">Inclusive of all taxes</div>
+          <div style="font-size:13px;color:#555;margin-bottom:12px">EMI starts at ₹${fmt(p.emi)}. <a href="#">No Cost EMI available</a></div>
+          <div class="offers-grid">${p.offers.map(o=>`<div class="offer-card"><div class="offer-title">${o.t}</div><div class="offer-detail">${o.d}</div></div>`).join('')}</div>
+          <div class="service-strip">${p.services.map(s=>`<div class="service-item"><div class="service-icon">${s.split(' ')[0]}</div><div>${s.split(' ').slice(1).join(' ')}</div></div>`).join('')}</div>
+        </div>
+        <div>
+          <div class="buybox">
+            <div class="price-deal" style="font-size:20px;margin-bottom:8px">₹${fmt(p.price)}</div>
+            <div style="font-size:13px;color:#007600;margin-bottom:4px">FREE Delivery</div>
+            <div style="font-size:12px;color:#555;margin-bottom:10px">Shivamogga, Karnataka 572004</div>
+            <div class="in-stock">In stock</div>
+            <div class="seller-info">Ships from: <strong>Amazon</strong><br>Sold by: <a href="#">Paralink Official</a></div>
+            <button class="btn-atc" onclick="showToast('Added to cart!')">Add to Cart</button>
+            <button class="btn-buy" onclick="showToast('Redirecting to checkout...')">Buy Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectProduct(id){
+  currentProductId = id;
+  document.querySelectorAll('.picker-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('card-'+id)?.classList.add('selected');
+  document.querySelectorAll('.product-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  const w = document.getElementById('detail-wrapper');
+  w.style.display='block';
+  w.style.animation='none'; w.offsetHeight; w.style.animation='';
+  setTimeout(()=>{
+    w.scrollIntoView({behavior:'smooth',block:'start'});
+    // Show review panel for this product
+    if(window.renderProductPanel && window.SEED_DATA){
+      const prod = SEED_DATA.products.find(p=>p.product_id===id);
+      if(prod) renderProductPanel(prod,'amazon');
+    }
+  },80);
+}
+
+function backToSelection(){
+  document.getElementById('detail-wrapper').style.display='none';
+  document.querySelectorAll('.picker-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('product-picker').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+buildPicker();
+buildDetails();
+// Init review engine — simulation.js already loaded above
+bootstrapReviews('amazon');
+updateLiveCounter();
+</script>
+</body>
+</html>

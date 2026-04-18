@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply text-slate-200 antialiased;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-xl border border-slate-700/80 bg-slate-900/40 shadow-sm shadow-black/30 backdrop-blur-sm;
+  }
+  .section-label {
+    @apply text-[10px] font-semibold uppercase tracking-[0.14em] text-sky-400/90;
+  }
+  .focus-ring {
+    @apply outline-none ring-offset-2 ring-offset-[#0a0f1a] focus-visible:ring-2 focus-visible:ring-sky-500/60;
+  }
+}
+
+.bg-grid {
+  background-color: #0a0f1a;
+  background-image:
+    linear-gradient(rgba(51, 65, 85, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 65, 85, 0.35) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: center top;
+}
+
+::selection {
+  background: rgba(56, 189, 248, 0.35);
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JioMart — PRISM Simulation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./simulation.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',Arial,sans-serif;background:#f5f5f5;color:#1a1a1a;min-height:100vh}
+    .jm-nav{background:#002D62;padding:10px 20px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+    .jm-logo{color:white;font-size:24px;font-weight:800;letter-spacing:-1px}
+    .jm-logo span{color:#EE3030}
+    .jm-search{flex:1;max-width:560px;display:flex;height:38px;background:white;border-radius:6px;overflow:hidden}
+    .jm-search input{flex:1;padding:0 12px;border:none;font-size:14px;outline:none}
+    .jm-search button{background:#EE3030;border:none;padding:0 16px;cursor:pointer;color:white;font-size:16px}
+    .jm-nav-links{margin-left:auto;display:flex;gap:16px}
+    .jm-nav-links a{color:white;text-decoration:none;font-size:13px}
+    .jm-subnav{background:#EE3030;padding:8px 20px;display:flex;gap:20px;overflow-x:auto}
+    .jm-subnav a{color:white;text-decoration:none;font-size:13px;white-space:nowrap;opacity:.9}
+    .jm-subnav a:hover{opacity:1}
+    .prism-banner{background:linear-gradient(135deg,#0f172a,#450a0a);color:white;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;font-size:13px}
+    .prism-badge{background:#EE3030;color:white;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
+    .live-counter{color:#fca5a5;font-size:13px}
+    .page-container{max-width:1200px;margin:0 auto;padding:20px}
+    .page-title{font-size:20px;font-weight:700;margin-bottom:16px;color:#002D62}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:24px}
+    .product-grid-card{background:white;border-radius:8px;padding:16px;cursor:pointer;transition:box-shadow .2s;border:2px solid transparent;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .product-grid-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.12)}
+    .product-grid-card.active{border-color:#EE3030}
+    .grid-product-img{width:100%;height:160px;object-fit:cover;border-radius:6px;margin-bottom:12px}
+    .grid-product-category{font-size:11px;color:#888;text-transform:uppercase}
+    .grid-product-name{font-size:14px;font-weight:600;margin:4px 0;line-height:1.3}
+    .grid-product-price{font-size:18px;font-weight:700;color:#002D62;margin:8px 0}
+    .grid-product-btn{width:100%;padding:8px;background:#EE3030;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;color:white;transition:background .2s}
+    .grid-product-btn:hover{background:#cc2020}
+    .reviews-section{background:white;border-radius:8px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .reviews-section h2{font-size:18px;font-weight:700;color:#002D62;margin-bottom:4px}
+    .subtitle{color:#888;font-size:13px;margin-bottom:20px}
+    .review-card{border:1px solid #f0f0f0;border-radius:8px;padding:16px;margin-bottom:12px;animation:fadeIn .3s}
+    .review-card.new{border-color:#EE3030;background:#fff5f5}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .review-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .review-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#EE3030,#002D62);color:white;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .review-user{font-size:14px;font-weight:600}
+    .review-time{margin-left:auto;font-size:12px;color:#888}
+    .review-text{font-size:14px;color:#444;line-height:1.6}
+    .review-badge{display:inline-block;margin-top:8px;background:#e8f5e9;color:#2e7d32;font-size:11px;padding:2px 8px;border-radius:4px}
+    .write-review{background:#f9f9f9;border:1px solid #e5e5e5;border-radius:8px;padding:20px;margin-bottom:24px}
+    .write-review h3{font-size:16px;font-weight:700;margin-bottom:16px;color:#002D62}
+    .form-group{margin-bottom:14px}
+    .form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#555}
+    .form-group input,.form-group textarea{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+    .form-group input:focus,.form-group textarea:focus{border-color:#EE3030}
+    .form-group textarea{resize:vertical;min-height:80px}
+    .star-rating-row{display:flex;gap:4px;margin-top:4px}
+    .star-btn{background:none;border:none;font-size:28px;cursor:pointer;color:#d1d5db;transition:transform .1s,color .1s;padding:2px}
+    .btn-submit{background:#EE3030;color:white;border:none;padding:10px 24px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
+    .btn-submit:hover{background:#cc2020}
+    .submit-status{display:none;margin-top:10px;padding:8px 12px;border-radius:6px;font-size:13px}
+    .submit-status.loading{background:#eff6ff;color:#1d4ed8}
+    .submit-status.success{background:#f0fdf4;color:#166534}
+    .submit-status.warning{background:#fffbeb;color:#92400e}
+    .jm-footer{background:#002D62;color:#a0b4cc;text-align:center;padding:20px;font-size:12px;margin-top:40px}
+    .prism-footer-link{display:inline-flex;align-items:center;gap:8px;margin-top:8px;color:#93c5fd;text-decoration:none;font-size:12px}
+  </style>
+</head>
+<body>
+<nav class="jm-nav">
+  <div class="jm-logo">Jio<span>Mart</span></div>
+  <div class="jm-search"><input type="text" placeholder="Search products on JioMart..." /><button>🔍</button></div>
+  <div class="jm-nav-links"><a href="#">Login</a><a href="#">Cart 🛒</a></div>
+</nav>
+<div class="jm-subnav">
+  <a href="#">Grocery</a><a href="#">Electronics</a><a href="#">Fashion</a><a href="#">Home</a><a href="#">Mobile</a><a href="#">Appliances</a>
+</div>
+<div class="prism-banner">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span class="prism-badge">🔬 PRISM Simulation</span>
+    <span style="color:#fca5a5">Reviews here feed into PRISM's AI intelligence pipeline</span>
+  </div>
+  <span class="live-counter prism-live-counter" id="live-counter">Loading reviews...</span>
+</div>
+
+<div class="page-container">
+  <div class="page-title">Paralink Products</div>
+  <div id="products-grid" class="products-grid"></div>
+</div>
+
+<div class="jm-footer">
+  <div>© 2026 JioMart — PRISM Hackathon Simulation</div>
+  <a href="http://localhost:5173" target="_blank" class="prism-footer-link">📊 Open PRISM Dashboard →</a>
+</div>
+
+<script src="./seed-data.js"></script>
+<script src="./reviews-data.js"></script>
+<script src="./simulation.js"></script>
+<script>
+  const PLATFORM = 'jiomart';
+  async function init() {
+    await renderAllProducts(PLATFORM, 'products-grid', pid => {
+      document.querySelectorAll('.product-grid-card').forEach((c,i) => c.classList.toggle('active', seedData?.products[i]?.product_id === pid));
+    });
+    document.querySelector('.product-grid-card')?.classList.add('active');
+    await initProductCommerceExperience(PLATFORM);
+  }
+  init();
+</script>
+</body>
+</html>
