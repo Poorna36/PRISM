@@ -6,7 +6,7 @@ Protected by an employee authentication gate — the login page is the first thi
 
 ---
 
-## Docs — Load Only What You Need
+## Docs
 
 | File | Read when building... |
 |------|-----------------------|
