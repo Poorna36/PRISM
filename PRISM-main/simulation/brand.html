@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paralink — Official Store | PRISM Simulation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./simulation.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #ffffff; color: #111827; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+    .top-strip { background: #111827; color: #e5e7eb; font-size: 12px; padding: 8px 24px; text-align: center; }
+    .main-nav {
+      position: sticky; top: 0; z-index: 50; background: #ffffff;
+      border-bottom: 1px solid #e5e7eb; display: flex; align-items: center;
+      gap: 20px; padding: 14px 24px;
+    }
+    .logo { font-weight: 800; font-size: 24px; letter-spacing: 0.5px; color: #111827; }
+    .logo span { color: #4f46e5; }
+    .nav-links { display: flex; gap: 14px; font-size: 13px; color: #4b5563; flex-wrap: wrap; }
+    .nav-links a:hover { color: #111827; }
+    .nav-actions { margin-left: auto; display: flex; gap: 14px; color: #6b7280; font-size: 13px; }
+    .prism-banner {
+      background: linear-gradient(135deg, #4c1d95, #1d4ed8); color: #e0e7ff;
+      padding: 10px 24px; display: flex; align-items: center;
+      justify-content: space-between; gap: 12px; font-size: 13px;
+    }
+    .prism-badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+    .live-counter { color: #c7d2fe; font-weight: 500; white-space: nowrap; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    .breadcrumb { color: #6b7280; font-size: 12px; margin: 6px 0 20px; }
+    .page-title { font-size: 30px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .page-subtitle { color: #6b7280; margin-bottom: 20px; }
+    .toolbar {
+      border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; margin-bottom: 24px; font-size: 13px; color: #374151;
+    }
+    .toolbar b { color: #111827; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-bottom: 40px; }
+    .product-grid-card {
+      border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;
+      background: #ffffff; transition: all 0.2s; cursor: pointer; padding: 0;
+    }
+    .product-grid-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(17,24,39,0.08); }
+    .product-grid-card.active { border-color: #4f46e5; box-shadow: 0 0 0 1px #4f46e5; }
+    .product-grid-card .grid-product-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+    .product-grid-card .grid-product-category { color: #6b7280; text-transform: uppercase; letter-spacing: 0.6px; font-size: 11px; margin: 14px 14px 4px; }
+    .product-grid-card .grid-product-name { font-size: 15px; font-weight: 700; line-height: 1.35; margin: 0 14px 6px; }
+    .product-grid-card .grid-product-price { font-size: 16px; font-weight: 700; margin: 0 14px 8px; }
+    .product-grid-card .grid-product-btn {
+      width: calc(100% - 28px); margin: 0 14px 14px; border: none; border-radius: 8px;
+      background: #111827; color: #fff; font-size: 13px; font-weight: 700; padding: 10px; cursor: pointer;
+    }
+    .product-grid-card .grid-product-btn:hover { background: #1f2937; }
+    .reviews-section { border: 1px solid #e5e7eb; border-radius: 16px; background: #fff; padding: 24px; }
+    .reviews-section h2 { font-size: 21px; margin-bottom: 4px; }
+    .subtitle { color: #6b7280; margin-bottom: 20px; font-size: 14px; }
+    .review-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; background: #fff; margin-bottom: 10px; animation: fadeIn 0.25s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    .review-header { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .review-avatar { width: 34px; height: 34px; border-radius: 50%; background: #111827; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+    .review-user { font-size: 14px; font-weight: 700; }
+    .review-time { margin-left: auto; font-size: 12px; color: #6b7280; }
+    .review-text { color: #374151; font-size: 14px; line-height: 1.65; }
+    footer { margin-top: 42px; border-top: 1px solid #e5e7eb; padding: 24px; text-align: center; color: #6b7280; font-size: 12px; }
+    .prism-footer-link { display: inline-block; margin-top: 10px; color: #4338ca; font-weight: 700; font-size: 13px; }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .toolbar { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .prism-banner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-strip">Free Shipping PAN India | 1 Year Warranty on All Products</div>
+  <nav class="main-nav">
+    <div class="logo">PARA<span>LINK</span></div>
+    <div class="nav-links">
+      <a href="#">Earbuds</a>
+      <a href="#">Refrigerators</a>
+      <a href="#">Gaming</a>
+      <a href="#">Monitors</a>
+      <a href="#">All Products</a>
+    </div>
+    <div class="nav-actions">
+      <span>Search</span>
+      <span>Account</span>
+      <span>Cart</span>
+    </div>
+  </nav>
+  <div class="prism-banner">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="prism-badge">PRISM Simulation</span>
+      <span>This official store page is wired to the PRISM ingest API.</span>
+    </div>
+    <span class="live-counter prism-live-counter" id="live-counter">Loading reviews...</span>
+  </div>
+  <div class="container page-container">
+    <div class="breadcrumb">Home / All Products</div>
+    <h1 class="page-title">Paralink — All Products</h1>
+    <p class="page-subtitle">Premium electronics engineered for performance. Browse our complete lineup.</p>
+    <div class="toolbar">
+      <div><b>4 products</b> in collection</div>
+      <div>Sort: Featured | Price low to high</div>
+    </div>
+    <div id="products-grid" class="products-grid"></div>
+  </div>
+  <footer>
+    <div>&copy; 2026 Paralink Official Store &mdash; PRISM Hackathon Simulation</div>
+    <a href="http://localhost:5173" target="_blank" class="prism-footer-link">Open PRISM Intelligence Dashboard &rarr;</a>
+  </footer>
+  <script src="./seed-data.js"></script>
+  <script src="./reviews-data.js"></script>
+  <script src="./simulation.js"></script>
+  <script>
+    const PLATFORM = 'brand';
+    async function init() {
+      await renderAllProducts(PLATFORM, 'products-grid', pid => {
+        document.querySelectorAll('.product-grid-card').forEach(c => c.classList.toggle('active', c.dataset.productId === pid));
+      });
+      document.querySelector('.product-grid-card')?.classList.add('active');
+      await initProductCommerceExperience(PLATFORM);
+    }
+    init();
+  </script>
+</body>
+</html>

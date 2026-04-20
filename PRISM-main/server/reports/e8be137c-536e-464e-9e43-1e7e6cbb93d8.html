@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', -apple-system, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 40px;
+      line-height: 1.6;
+    }
+    .page-break { page-break-before: always; }
+    h1 { font-size: 28px; color: #f1f5f9; margin-bottom: 8px; }
+    h2 { font-size: 20px; color: #f1f5f9; margin-bottom: 16px; border-bottom: 2px solid #334155; padding-bottom: 8px; }
+    h3 { font-size: 16px; color: #f1f5f9; margin-bottom: 12px; }
+    .section { margin-bottom: 32px; }
+    .card { background: #1e293b; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+    .score-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white; font-size: 32px; font-weight: 700;
+    }
+    .meta { color: #94a3b8; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+  <!-- Section 1: Cover -->
+  <div class="section" style="text-align: center; padding: 60px 0;">
+    <h1 style="font-size: 36px; margin-bottom: 16px;">PRISM Intelligence Report</h1>
+    <p style="font-size: 18px; color: #94a3b8; margin-bottom: 8px;">Product: <strong style="color: #f1f5f9; text-transform: capitalize;">prod 002</strong></p>
+    <p style="font-size: 14px; color: #64748b;">Platform: all | Generated: 2026-04-18</p>
+    <div style="margin-top: 40px;">
+      <div class="score-badge" style="margin: 0 auto; width: 120px; height: 120px; font-size: 48px;">95</div>
+      <p style="margin-top: 12px; color: #94a3b8;">Health Score</p>
+    </div>
+  </div>
+
+  <!-- Section 2: Executive Summary -->
+  <div class="page-break"></div>
+  <div class="section">
+    <h2>Executive Summary</h2>
+    <div class="card">
+      <p style="font-size: 15px; margin-bottom: 16px;">Overwhelmingly Positive (94% positive, 116 reviews), driven by value for money (33%) issues</p>
+      <div style="display: flex; gap: 32px; margin-bottom: 16px;">
+        <div><span class="meta">Total Reviews</span><br><strong style="font-size: 24px;">116</strong></div>
+        <div><span class="meta">Flagged</span><br><strong style="font-size: 24px; color: #ef4444;">62</strong></div>
+        <div><span class="meta">Health Score</span><br><strong style="font-size: 24px; color: #22c55e;">95/100</strong></div>
+      </div>
+      
+        <h3>Top Issues</h3>
+        <ol style="padding-left: 20px; color: #cbd5e1; font-size: 14px;">
+          <li style="margin-bottom: 6px;"><strong style="text-transform: capitalize;">performance</strong> — low severity, systemic issue (97% confidence)</li><li style="margin-bottom: 6px;"><strong style="text-transform: capitalize;">performance</strong> — low severity, systemic issue (97% confidence)</li><li style="margin-bottom: 6px;"><strong style="text-transform: capitalize;">performance</strong> — low severity, systemic issue (96% confidence)</li>
+        </ol>
+      
+    </div>
+  </div>
+
+  <!-- Section 3: Feature Analysis -->
+  <div class="section">
+    <h2>Feature-Level Sentiment Analysis</h2>
+    <div class="card">
+      
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="font-weight: 600; text-transform: capitalize;">performance</span>
+            <span style="color: #94a3b8; font-size: 12px;">14 reviews</span>
+          </div>
+          <div style="display: flex; height: 24px; border-radius: 4px; overflow: hidden; background: #334155;">
+            <div style="width: 100%; background: #22c55e; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">100%</div>
+            <div style="width: 0%; background: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">0%</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="font-weight: 600; text-transform: capitalize;">value for money</span>
+            <span style="color: #94a3b8; font-size: 12px;">12 reviews</span>
+          </div>
+          <div style="display: flex; height: 24px; border-radius: 4px; overflow: hidden; background: #334155;">
+            <div style="width: 67%; background: #22c55e; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">67%</div>
+            <div style="width: 33%; background: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">33%</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="font-weight: 600; text-transform: capitalize;">build quality</span>
+            <span style="color: #94a3b8; font-size: 12px;">11 reviews</span>
+          </div>
+          <div style="display: flex; height: 24px; border-radius: 4px; overflow: hidden; background: #334155;">
+            <div style="width: 100%; background: #22c55e; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">100%</div>
+            <div style="width: 0%; background: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">0%</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="font-weight: 600; text-transform: capitalize;">delivery speed</span>
+            <span style="color: #94a3b8; font-size: 12px;">10 reviews</span>
+          </div>
+          <div style="display: flex; height: 24px; border-radius: 4px; overflow: hidden; background: #334155;">
+            <div style="width: 100%; background: #22c55e; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">100%</div>
+            <div style="width: 0%; background: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">0%</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="font-weight: 600; text-transform: capitalize;">battery life</span>
+            <span style="color: #94a3b8; font-size: 12px;">9 reviews</span>
+          </div>
+          <div style="display: flex; height: 24px; border-radius: 4px; overflow: hidden; background: #334155;">
+            <div style="width: 100%; background: #22c55e; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">100%</div>
+            <div style="width: 0%; background: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">0%</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="font-weight: 600; text-transform: capitalize;">packaging</span>
+            <span style="color: #94a3b8; font-size: 12px;">5 reviews</span>
+          </div>
+          <div style="display: flex; height: 24px; border-radius: 4px; overflow: hidden; background: #334155;">
+            <div style="width: 100%; background: #22c55e; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">100%</div>
+            <div style="width: 0%; background: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">0%</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span style="font-weight: 600; text-transform: capitalize;">customer support</span>
+            <span style="color: #94a3b8; font-size: 12px;">3 reviews</span>
+          </div>
+          <div style="display: flex; height: 24px; border-radius: 4px; overflow: hidden; background: #334155;">
+            <div style="width: 100%; background: #22c55e; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">100%</div>
+            <div style="width: 0%; background: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">0%</div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Section 4: Product Summary -->
+  <div class="page-break"></div>
+  <div class="section">
+    <h2>Product Summary</h2>
+    <div class="card" style="text-align: center; padding: 32px;">
+      <p style="font-size: 18px; font-style: italic; color: #f1f5f9;">"Overwhelmingly Positive (94% positive, 116 reviews), driven by value for money (33%) issues"</p>
+    </div>
+  </div>
+
+  <!-- Section 5: Issue Deep-Dives -->
+  <div class="section">
+    <h2>Issue Analysis & Recommendations</h2>
+    
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">97%</strong></span>
+          <span>Affected: <strong>44%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">97%</strong></span>
+          <span>Affected: <strong>42%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">96%</strong></span>
+          <span>Affected: <strong>39%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">96%</strong></span>
+          <span>Affected: <strong>42%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">96%</strong></span>
+          <span>Affected: <strong>36%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">95%</strong></span>
+          <span>Affected: <strong>42%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">95%</strong></span>
+          <span>Affected: <strong>43%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">95%</strong></span>
+          <span>Affected: <strong>43%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">95%</strong></span>
+          <span>Affected: <strong>42%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+      <div style="background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h4 style="margin: 0; text-transform: capitalize; color: #f1f5f9;">performance</h4>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">low</span>
+            <span style="background: #22c55e22; color: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">systemic</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 24px; margin-bottom: 8px; font-size: 13px; color: #94a3b8;">
+          <span>Confidence: <strong style="color: #22c55e;">95%</strong></span>
+          <span>Affected: <strong>43%</strong> of reviews</span>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.5;">Investigate performance bottlenecks. May require firmware/software update or hardware revision.</p>
+      </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align: center; padding: 24px 0; border-top: 1px solid #334155; margin-top: 32px;">
+    <p class="meta">Generated by PRISM — Customer Review Intelligence Platform</p>
+    <p class="meta">2026-04-18</p>
+  </div>
+
+</body>
+</html>

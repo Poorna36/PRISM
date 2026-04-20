@@ -1,0 +1,29 @@
+{
+  "name": "prism-server",
+  "version": "1.0.0",
+  "description": "PRISM - Customer Review Intelligence Platform Backend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js",
+    "reprocess": "node reprocess-all.js",
+    "ingest:all": "node bulk-ingest.js",
+    "ingest:all:fresh": "node bulk-ingest.js --fresh",
+    "verify:survey": "node scripts/verify-stage7.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "cookie-parser": "^1.4.6",
+    "jsonwebtoken": "^9.0.2",
+    "sequelize": "^6.35.2",
+    "sqlite3": "^5.1.7",
+    "uuid": "^9.0.0",
+    "socket.io": "^4.7.4",
+    "axios": "^1.6.5",
+    "@xenova/transformers": "^2.17.1",
+    "natural": "^6.10.4",
+    "nodemailer": "^6.9.16"
+  }
+}

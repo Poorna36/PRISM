@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-base: #080C14;
+    --bg-surface: #0E1420;
+    --bg-elevated: #131929;
+    --border: #1C2537;
+    --accent-cyan: #00D4FF;
+    --accent-orange: #FF6B35;
+    --positive: #00E5A0;
+    --negative: #FF3D5A;
+    --text-primary: #E8EDF5;
+    --text-secondary: #6B7A99;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+    --radius: 2px;
+    --transition: 200ms ease;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-bg-base text-text-primary antialiased;
+    font-family: var(--font-body);
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, #1C2537 39px, #1C2537 40px), 
+                      repeating-linear-gradient(90deg, transparent, transparent 39px, #1C2537 39px, #1C2537 40px);
+    background-size: 100% 100%;
+  }
+
+  * {
+    transition: color var(--transition), background-color var(--transition), border-color var(--transition);
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-bg-surface border border-border rounded-industrial p-4;
+    box-shadow: 0px 0px 0px 1px #1C2537;
+  }
+
+  .card-hover {
+    @apply card hover:border-accent-cyan hover:shadow-glow;
+  }
+
+  .section-label {
+    @apply text-[10px] font-mono uppercase tracking-[0.15em] text-text-secondary mb-3;
+  }
+
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base;
+  }
+
+  .btn-primary {
+    @apply bg-accent-cyan text-bg-base font-display font-semibold px-4 py-2 rounded-industrial focus-ring hover:bg-accent-cyan/90;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent border border-accent-cyan text-accent-cyan font-display font-semibold px-4 py-2 rounded-industrial focus-ring hover:bg-accent-cyan/10;
+  }
+
+  .chip {
+    @apply bg-bg-elevated border border-border px-3 py-1 rounded-industrial text-sm font-mono;
+  }
+
+  .chip-active {
+    @apply bg-accent-cyan/20 border-accent-cyan text-accent-cyan;
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+  }
+
+  .glow-orange {
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.15);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--positive));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sidebar-collapsed {
+    width: 60px;
+  }
+
+  .sidebar-expanded {
+    width: 220px;
+  }
+}
+
+@layer utilities {
+  .animate-grid {
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 40px; }
+  }
+
+  .animate-count {
+    animation: countUp 1s ease-out;
+  }
+
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-pulse-cyan {
+    animation: pulseCyan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulseCyan {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.4);
+    }
+    50% {
+      opacity: 0.7;
+      box-shadow: 0 0 0 8px rgba(0, 212, 255, 0);
+    }
+  }
+}
+
+::selection {
+  background: rgba(0, 212, 255, 0.3);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
