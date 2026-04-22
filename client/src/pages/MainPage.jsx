@@ -163,10 +163,10 @@ export default function MainPage() {
       {/* Sidebar */}
       <motion.div
         className={`fixed left-0 top-0 h-full bg-bg-surface border-r border-border z-50 ${sidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'}`}
-        animate={{ width: sidebarExpanded ? 220 : 60 }}
+        animate={{ width: sidebarExpanded ? 180 : 48 }}
         transition={{ duration: 0.2 }}
       >
-        <div className="p-4">
+        <div className="p-2">
           <div className="flex items-center mb-8">
             <div className="w-3 h-3 bg-accent-cyan rounded-sm flex-shrink-0" />
             {sidebarExpanded && (
@@ -191,7 +191,7 @@ export default function MainPage() {
                     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
-                className={`w-full flex items-center px-3 py-2 rounded-industrial transition-all ${
+                className={`w-full flex items-center px-1 py-2 rounded-industrial transition-all ${
                   activeSection === item.id
                     ? 'bg-accent-cyan/20 border-l-3 border-accent-cyan text-accent-cyan'
                     : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
@@ -225,11 +225,14 @@ export default function MainPage() {
       </motion.div>
 
       {/* Main Content */}
-      <div className={`flex-1 ${sidebarExpanded ? 'ml-56' : 'ml-16'} transition-all duration-200`}>
+      <div className={`flex-1 ${sidebarExpanded ? 'ml-48' : 'ml-12'} transition-all duration-200`}>
         {/* Top Bar */}
         <header className="fixed top-0 left-0 right-0 h-12 bg-bg-surface border-b border-border z-40 flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
-            <div className="flex items-center">
+            <div
+              className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => window.location.reload()}
+            >
               <div className="w-2 h-2 bg-accent-cyan rounded-sm mr-2" />
               <span className="font-display font-bold text-text-primary">PRISM</span>
             </div>

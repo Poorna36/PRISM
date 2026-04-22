@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthStore } from './store/authStore';
 import AuthPage from './pages/AuthPage';
 import MainPage from './pages/MainPage';
+import LandingPage from './pages/LandingPage';
 
 export default function App() {
-  const { isAuthenticated, isCheckingSession, checkSession } = useAuthStore();
+  const { isAuthenticated, isCheckingSession, checkSession, logout } = useAuthStore();
+  const [showLanding, setShowLanding] = useState(true);
 
   useEffect(() => {
     checkSession();
@@ -18,6 +20,20 @@ export default function App() {
     );
   }
 
-  if (!isAuthenticated) return <AuthPage />;
-  return <MainPage />;
+  return (
+    <>
+      {!isAuthenticated ? <AuthPage /> : <MainPage />}
+      
+      {showLanding && (
+        <LandingPage 
+          onGetStarted={() => {
+            logout();
+          }}
+          onEnter={() => {
+            setShowLanding(false);
+          }} 
+        />
+      )}
+    </>
+  );
 }

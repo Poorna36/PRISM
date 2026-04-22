@@ -168,10 +168,7 @@ const PRODUCTS = [
   }
 ];
 
-let currentProductId = PRODUCTS[0].id;
-
-function fmt(n){ return new Intl.NumberFormat('en-IN').format(n); }
-function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+currentProductId = PRODUCTS[0].id;
 
 // Build picker cards
 function buildPicker(){
@@ -217,7 +214,7 @@ function buildDetails(){
           <div class="buybox">
             <div class="price-deal" style="font-size:20px;margin-bottom:8px">₹${fmt(p.price)}</div>
             <div style="font-size:13px;color:#007600;margin-bottom:4px">FREE Delivery</div>
-            <div style="font-size:12px;color:#555;margin-bottom:10px">Shivamogga, Karnataka 572004</div>
+            <div style="font-size:12px;color:#555;margin-bottom:10px">Bangalore, Karnataka</div>
             <div class="in-stock">In stock</div>
             <div class="seller-info">Ships from: <strong>Amazon</strong><br>Sold by: <a href="#">Paralink Official</a></div>
             <button class="btn-atc" onclick="showToast('Added to cart!')">Add to Cart</button>
@@ -241,7 +238,7 @@ function selectProduct(id){
   setTimeout(()=>{
     w.scrollIntoView({behavior:'smooth',block:'start'});
     // Show review panel for this product
-    if(window.renderProductPanel && window.SEED_DATA){
+    if(typeof renderProductPanel !== 'undefined' && typeof SEED_DATA !== 'undefined'){
       const prod = SEED_DATA.products.find(p=>p.product_id===id);
       if(prod) renderProductPanel(prod,'amazon');
     }
