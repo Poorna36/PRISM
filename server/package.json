@@ -12,18 +12,21 @@
     "verify:survey": "node scripts/verify-stage7.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "@xenova/transformers": "^2.17.1",
+    "axios": "^1.6.5",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
-    "sequelize": "^6.35.2",
-    "sqlite3": "^5.1.7",
-    "uuid": "^9.0.0",
-    "socket.io": "^4.7.4",
-    "axios": "^1.6.5",
-    "@xenova/transformers": "^2.17.1",
     "natural": "^6.10.4",
-    "nodemailer": "^6.9.16"
+    "nodemailer": "^6.9.16",
+    "pg": "^8.20.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.35.2",
+    "socket.io": "^4.7.4",
+    "sqlite3": "^5.1.7",
+    "uuid": "^9.0.0"
   }
 }

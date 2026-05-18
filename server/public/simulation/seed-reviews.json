@@ -1,0 +1,69 @@
+{
+  "products": [
+    {
+      "product_id": "prod_001",
+      "name": "Paralink Nord 3 Pro",
+      "category": "True Wireless Earbuds",
+      "description": "Premium TWS earbuds with hybrid ANC 40dB, 12mm titanium drivers, BT 5.3, 32hr battery, IP55, gaming mode.",
+      "price": 3499,
+      "mrp": 6999,
+      "platform_prices": { "amazon": 3499, "flipkart": 3299, "jiomart": 3599, "brand": 2999 },
+      "emoji": "🎧",
+      "images": {
+        "amazon": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=600&h=400&fit=crop",
+        "flipkart": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=600&h=400&fit=crop",
+        "jiomart": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=600&h=400&fit=crop",
+        "brand": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=600&h=400&fit=crop"
+      }
+    },
+    {
+      "product_id": "prod_002",
+      "name": "Paralink Refrigerator",
+      "category": "Refrigerators",
+      "description": "265L double door frost-free refrigerator, digital inverter, convertible 5-in-1, 3-star energy rating.",
+      "price": 26990,
+      "mrp": 38490,
+      "platform_prices": { "amazon": 26990, "flipkart": 25999, "jiomart": 27490, "brand": 24999 },
+      "emoji": "❄️",
+      "images": {
+        "amazon": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&h=400&fit=crop",
+        "flipkart": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&h=400&fit=crop",
+        "jiomart": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&h=400&fit=crop",
+        "brand": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600&h=400&fit=crop"
+      }
+    },
+    {
+      "product_id": "prod_003",
+      "name": "Paralink Gamepad Pro",
+      "category": "Gaming Controllers",
+      "description": "Wireless controller with hall-effect triggers, dual vibration, RGB, BT 5.0 + 2.4GHz, USB-C, 20hr battery.",
+      "price": 4999,
+      "mrp": 7999,
+      "platform_prices": { "amazon": 4999, "flipkart": 4799, "jiomart": 5199, "brand": 4499 },
+      "emoji": "🎮",
+      "images": {
+        "amazon": "https://images.unsplash.com/photo-1592840496694-26d035b52b48?w=600&h=400&fit=crop",
+        "flipkart": "https://images.unsplash.com/photo-1592840496694-26d035b52b48?w=600&h=400&fit=crop",
+        "jiomart": "https://images.unsplash.com/photo-1592840496694-26d035b52b48?w=600&h=400&fit=crop",
+        "brand": "https://images.unsplash.com/photo-1592840496694-26d035b52b48?w=600&h=400&fit=crop"
+      }
+    },
+    {
+      "product_id": "prod_004",
+      "name": "Paralink 25 Inch Monitor",
+      "category": "Gaming Monitors",
+      "description": "25\" FHD IPS 165Hz 1ms gaming monitor, HDR400, FreeSync Premium, USB-C 65W, height-adjustable stand.",
+      "price": 14999,
+      "mrp": 24999,
+      "platform_prices": { "amazon": 14999, "flipkart": 14499, "jiomart": 15499, "brand": 13999 },
+      "emoji": "🖥️",
+      "images": {
+        "amazon": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop",
+        "flipkart": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop",
+        "jiomart": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop",
+        "brand": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=400&fit=crop"
+      }
+    }
+  ],
+  "reviews": []
+}

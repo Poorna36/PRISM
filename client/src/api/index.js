@@ -9,6 +9,15 @@ export async function login(employeeId, password) {
   });
 }
 
+export async function register(employeeId, fullName, email, password) {
+  return fetch('/api/auth/register', {
+    method: 'POST',
+    credentials: 'include',
+    headers: jsonHeaders,
+    body: JSON.stringify({ employee_id: employeeId, full_name: fullName, email, password }),
+  });
+}
+
 export async function logout() {
   return fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
 }

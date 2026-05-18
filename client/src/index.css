@@ -13,7 +13,7 @@
 
 @layer components {
   .panel {
-    @apply rounded-xl border border-slate-700/80 bg-slate-900/40 shadow-sm shadow-black/30 backdrop-blur-sm;
+    @apply rounded-xl border border-white/10 bg-black/60 shadow-sm shadow-black/50 backdrop-blur-md;
   }
   .section-label {
     @apply text-[10px] font-semibold uppercase tracking-[0.14em] text-sky-400/90;

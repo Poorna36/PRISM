@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useAuthStore } from '../store/authStore';
 import { fetchDashboard, fetchDashboardAll } from '../api';
 import { PRODUCTS, productNameMap } from '../constants/products';
+import Waves from '../components/Waves';
 
 import HealthScoreCard from '../components/Dashboard/HealthScoreCard';
 import ProductLeaderboard from '../components/Dashboard/ProductLeaderboard';
@@ -83,8 +84,35 @@ export default function MainPage() {
   }, [dash, platform]);
 
   return (
-    <div className="min-h-screen bg-grid">
-      <header className="sticky top-0 z-40 border-b border-slate-800/80 bg-ink/85 shadow-sm shadow-black/40 backdrop-blur-xl">
+    <div className="min-h-screen bg-transparent" style={{ position: 'relative' }}>
+      
+      {/* Waves animated background */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <Waves
+          lineColor="rgba(255, 255, 255, 0.25)"
+          backgroundColor="#050814"
+          waveSpeedX={0.0125}
+          waveSpeedY={0.01}
+          waveAmpX={40}
+          waveAmpY={20}
+          friction={0.9}
+          tension={0.01}
+          maxCursorMove={120}
+          xGap={12}
+          yGap={36}
+        />
+      </div>
+
+      {/* Overlay to keep dashboard readable */}
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 1, pointerEvents: 'none',
+        background: 'rgba(5, 8, 20, 0.15)',
+      }} />
+
+      {/* All dashboard content */}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-black/60 shadow-sm shadow-black/40 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-4 px-4 py-3.5">
           <div className="flex min-w-0 items-center gap-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-sky-600 to-indigo-700 text-lg font-bold text-white shadow-lg shadow-sky-900/30">
@@ -283,6 +311,7 @@ export default function MainPage() {
           </div>
         </div>
       </div>
+      </div>{/* end content zIndex:2 */}
     </div>
   );
 }
