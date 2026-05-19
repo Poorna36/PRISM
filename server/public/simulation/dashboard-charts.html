@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PRISM — Time series & alerts</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --text: #e7eef8;
+      --muted: #8b9cb3;
+      --batch: #38bdf8;
+      --design: #f97316;
+      --delivery: #a78bfa;
+      --alert-high: #dc2626;
+      --alert-border: #fecaca;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+    }
+    header {
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid #2a3545;
+      display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;
+    }
+    h1 { margin: 0; font-size: 1.15rem; font-weight: 600; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+    label { font-size: 0.8rem; color: var(--muted); }
+    input, select, button {
+      background: var(--card); color: var(--text); border: 1px solid #334155;
+      padding: 0.45rem 0.65rem; border-radius: 6px; font-size: 0.9rem;
+    }
+    button { cursor: pointer; background: #2563eb; border-color: #3b82f6; font-weight: 600; }
+    button.secondary { background: var(--card); font-weight: 500; }
+    main { padding: 1.25rem 1.5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .alert-strip {
+      border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1.25rem;
+      border: 1px solid #334155; background: var(--card);
+    }
+    .alert-strip.high {
+      border-color: var(--alert-border);
+      background: linear-gradient(90deg, rgba(220,38,38,0.25), rgba(30,41,59,0.9));
+    }
+    .alert-strip h2 { margin: 0 0 0.35rem; font-size: 0.95rem; color: #fecaca; }
+    .alert-strip ul { margin: 0; padding-left: 1.1rem; font-size: 0.88rem; color: var(--text); }
+    .hints {
+      display: grid; gap: 0.65rem; margin-bottom: 1rem;
+    }
+    .hint {
+      border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 0.82rem;
+      border-left: 4px solid #64748b; background: var(--card);
+    }
+    .hint.batch_spike { border-left-color: var(--batch); }
+    .hint.design_creep { border-left-color: var(--design); }
+    .hint strong { display: block; margin-bottom: 0.2rem; }
+    .chart-wrap {
+      background: var(--card); border-radius: 12px; padding: 1rem 1rem 0.5rem;
+      border: 1px solid #2a3545; margin-bottom: 1rem;
+    }
+    .legend-inline {
+      font-size: 0.78rem; color: var(--muted); margin-top: 0.5rem; line-height: 1.5;
+    }
+    .err { color: #fca5a5; font-size: 0.85rem; margin-top: 0.5rem; }
+    .ok { color: #86efac; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PRISM dashboard — complaints time series</h1>
+    <div class="row">
+      <div>
+        <label for="emp">Employee ID</label><br />
+        <input id="emp" type="text" value="npd570" autocomplete="username" />
+      </div>
+      <div>
+        <label for="pw">Password</label><br />
+        <input id="pw" type="password" value="notre570" autocomplete="current-password" />
+      </div>
+      <div style="align-self: flex-end;">
+        <button type="button" id="loginBtn">Log in</button>
+      </div>
+      <div>
+        <label for="product">Product</label><br />
+        <select id="product">
+          <option value="prod_004" selected>prod_004 — Monitor (demo spike + drift)</option>
+          <option value="prod_001">prod_001 — Earbuds</option>
+          <option value="prod_002">prod_002 — Refrigerator</option>
+          <option value="prod_003">prod_003 — Gamepad</option>
+        </select>
+      </div>
+      <div style="align-self: flex-end;">
+        <button type="button" class="secondary" id="reloadBtn">Reload data</button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div id="alertBox" class="alert-strip" hidden>
+      <h2 id="alertTitle"></h2>
+      <ul id="alertList"></ul>
+    </div>
+    <p class="legend-inline" id="statusLine"></p>
+    <div id="hints" class="hints"></div>
+    <div class="chart-wrap">
+      <canvas id="chart" height="110"></canvas>
+      <p class="legend-inline">
+        <span style="color:var(--delivery)">■</span> Delivery / logistics complaints (% negative mentions per week)
+        &nbsp;·&nbsp;
+        <span style="color:var(--design)">■</span> Build / durability complaints (% negative)
+        &nbsp;·&nbsp;
+        <span style="color:var(--batch)">■</span> Packaging (% negative)
+      </p>
+    </div>
+    <p class="legend-inline">
+      Open this file from a static server (or after <code>npm start</code> in <code>server</code>) with the API on <code>http://localhost:5000</code>.
+      Seed reviews for <code>prod_004</code> include a <strong>one-week surge</strong> on delivery/packaging (batch-style) and a <strong>multi-week climb</strong> on build-quality wording (design-style).
+    </p>
+  </main>
+  <script>
+    const API = 'http://localhost:5000/api';
+    let chart;
+
+    async function login() {
+      const employee_id = document.getElementById('emp').value.trim();
+      const password = document.getElementById('pw').value;
+      const res = await fetch(API.replace('/api', '') + '/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ employee_id, password }),
+      });
+      if (!res.ok) throw new Error('Login failed: ' + res.status);
+      return res.json();
+    }
+
+    async function loadAlerts() {
+      const res = await fetch(API + '/alerts', { credentials: 'include' });
+      if (!res.ok) throw new Error('Alerts ' + res.status);
+      return res.json();
+    }
+
+    async function loadDashboard(productId) {
+      const res = await fetch(API + '/dashboard/' + encodeURIComponent(productId) + '?week_range=32', {
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Dashboard ' + res.status);
+      return res.json();
+    }
+
+    function pct(n) {
+      if (n == null || Number.isNaN(n)) return null;
+      return Math.round(n * 1000) / 10;
+    }
+
+    function renderAlerts(alerts) {
+      const box = document.getElementById('alertBox');
+      const title = document.getElementById('alertTitle');
+      const list = document.getElementById('alertList');
+      const high = (alerts || []).filter((a) => a.severity === 'high' && !a.dismissed);
+      if (!high.length) {
+        box.hidden = true;
+        return;
+      }
+      box.hidden = false;
+      box.className = 'alert-strip high';
+      title.textContent = 'High-severity alerts';
+      list.innerHTML = high
+        .map((a) => `<li><strong>${(a.feature || '').replace(/_/g, ' ')}</strong> — ${a.message || ''}</li>`)
+        .join('');
+    }
+
+    function renderHints(visual) {
+      const el = document.getElementById('hints');
+      el.innerHTML = '';
+      const hints = (visual && visual.hints) || [];
+      if (!hints.length) {
+        el.innerHTML = '<div class="hint">No automatic pattern tags for this product yet. Try <code>prod_004</code> after ingesting seed reviews.</div>';
+        return;
+      }
+      hints.forEach((h) => {
+        const d = document.createElement('div');
+        d.className = 'hint ' + (h.pattern || '');
+        d.innerHTML = '<strong>' + (h.label || h.pattern) + '</strong> (' + (h.feature || '').replace(/_/g, ' ') + ', ' + (h.week || '') + ')<br />' + (h.detail || '');
+        el.appendChild(d);
+      });
+    }
+
+    function renderChart(dash) {
+      const weeks = (dash.weekly_trends || []).map((w) => w.week);
+      const ds = (dash.weekly_trends || []).map((w) => pct(w.delivery_speed_negative));
+      const bq = (dash.weekly_trends || []).map((w) => pct(w.build_quality_negative));
+      const pk = (dash.weekly_trends || []).map((w) => pct(w.packaging_negative));
+
+      const ctx = document.getElementById('chart').getContext('2d');
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: weeks,
+          datasets: [
+            {
+              label: 'Delivery complaints (% neg.)',
+              data: ds,
+              borderColor: '#a78bfa',
+              backgroundColor: 'rgba(167,139,250,0.15)',
+              tension: 0.25,
+              spanGaps: true,
+            },
+            {
+              label: 'Build quality (% neg.)',
+              data: bq,
+              borderColor: '#f97316',
+              backgroundColor: 'rgba(249,115,22,0.12)',
+              tension: 0.25,
+              spanGaps: true,
+            },
+            {
+              label: 'Packaging (% neg.)',
+              data: pk,
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56,189,248,0.12)',
+              tension: 0.25,
+              spanGaps: true,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { labels: { color: '#cbd5e1' } },
+            title: {
+              display: true,
+              text: 'Weekly complaint intensity (processed reviews)',
+              color: '#e2e8f0',
+              font: { size: 14 },
+            },
+          },
+          scales: {
+            x: {
+              ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45, font: { size: 10 } },
+              grid: { color: 'rgba(148,163,184,0.12)' },
+            },
+            y: {
+              min: 0,
+              max: 100,
+              title: { display: true, text: '% negative mentions', color: '#94a3b8' },
+              ticks: { color: '#94a3b8' },
+              grid: { color: 'rgba(148,163,184,0.12)' },
+            },
+          },
+        },
+      });
+    }
+
+    async function refresh() {
+      const status = document.getElementById('statusLine');
+      status.textContent = 'Loading…';
+      status.className = '';
+      try {
+        const productId = document.getElementById('product').value;
+        const [dash, alerts] = await Promise.all([loadDashboard(productId), loadAlerts().catch(() => [])]);
+        renderAlerts(alerts);
+        renderHints(dash.timeseries_visual);
+        renderChart(dash);
+        status.textContent = 'Loaded ' + (dash.review_count || 0) + ' reviews · health score ' + (dash.health_score ?? '—');
+        status.className = 'ok';
+      } catch (e) {
+        status.textContent = String(e.message || e);
+        status.className = 'err';
+      }
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const status = document.getElementById('statusLine');
+      try {
+        await login();
+        status.textContent = 'Logged in.';
+        status.className = 'ok';
+        await refresh();
+      } catch (e) {
+        status.textContent = String(e.message || e);
+        status.className = 'err';
+      }
+    });
+    document.getElementById('reloadBtn').addEventListener('click', refresh);
+  </script>
+</body>
+</html>

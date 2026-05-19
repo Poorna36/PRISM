@@ -101,4 +101,17 @@ async function start() {
   }
 }
 
-start();
+if (process.env.VERCEL) {
+  // In Vercel, export the app for serverless execution
+  app.get('/api/sync-db', async (req, res) => {
+    try {
+      await sequelize.sync();
+      res.json({ message: 'Database synced successfully' });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+  module.exports = app;
+} else {
+  start();
+}

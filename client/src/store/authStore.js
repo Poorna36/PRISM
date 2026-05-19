@@ -1,11 +1,12 @@
 import { create } from 'zustand';
-import { getSession, login as apiLogin, logout as apiLogout } from '../api';
+import { getSession, login as apiLogin, logout as apiLogout, register as apiRegister } from '../api';
 
 export const useAuthStore = create((set) => ({
   isAuthenticated: false,
   isCheckingSession: true,
   employeeId: null,
   loginError: null,
+  registerError: null,
 
   checkSession: async () => {
     set({ isCheckingSession: true });
@@ -46,5 +47,21 @@ export const useAuthStore = create((set) => ({
   logout: async () => {
     await apiLogout();
     set({ isAuthenticated: false, employeeId: null });
+  },
+
+  register: async (employeeId, fullName, email, password) => {
+    set({ registerError: null });
+    const res = await apiRegister(employeeId, fullName, email, password);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      set({ registerError: data.error || 'Registration failed.' });
+      return false;
+    }
+    set({
+      isAuthenticated: true,
+      employeeId: data.employee_id || employeeId,
+      registerError: null,
+    });
+    return true;
   },
 }));

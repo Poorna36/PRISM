@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ConfidenceMeter from './ConfidenceMeter';
 import { labelFeature } from '../../constants/features';
@@ -7,6 +8,8 @@ function typeLabel(issue) {
 }
 
 export default function IssueList({ issues }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   // MOCK DATA FOR DEMO
   const demoIssues = [
     {
@@ -42,6 +45,7 @@ export default function IssueList({ issues }) {
   ];
 
   const displayIssues = issues?.length ? issues : demoIssues;
+  const visibleIssues = isExpanded ? displayIssues : displayIssues.slice(0, 5);
 
   if (!displayIssues?.length) {
     return (
@@ -55,7 +59,7 @@ export default function IssueList({ issues }) {
     <div>
       <h3 className="sr-only">Prioritized recommendations</h3>
       <ul className="space-y-3">
-        {displayIssues.map((issue, i) => (
+        {visibleIssues.map((issue, i) => (
           <motion.li
             key={issue.id || issue.issue_id || i}
             layout
@@ -83,6 +87,14 @@ export default function IssueList({ issues }) {
           </motion.li>
         ))}
       </ul>
+      {displayIssues.length > 5 && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="mt-4 w-full rounded-md border border-white/10 bg-black/40 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+        >
+          {isExpanded ? 'See less' : `See more (${displayIssues.length - 5})`}
+        </button>
+      )}
     </div>
   );
 }
