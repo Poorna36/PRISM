@@ -23,22 +23,22 @@ export default function HealthScoreCard({ score, productName }) {
   return (
     <motion.div
       layout
-      className="panel relative overflow-hidden p-6 shadow-panel"
+      className="panel relative overflow-hidden p-4 shadow-panel"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
     >
       <div
-        className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-20 blur-2xl"
+        className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full opacity-20 blur-2xl"
         style={{ background: `hsl(${hue} 70% 45%)` }}
       />
       <p className="section-label">Health score</p>
-      <p className="mt-1 truncate text-lg font-semibold text-white">{productName}</p>
-      <div className="mt-6 flex items-end gap-3">
-        <span className="text-5xl font-bold tabular-nums tracking-tight text-white">{display}</span>
-        <span className="mb-2 text-sm text-slate-500">/ 100</span>
+      <p className="mt-0.5 truncate text-sm font-semibold text-white">{productName}</p>
+      <div className="mt-3 flex items-end gap-2">
+        <span className="text-4xl font-bold tabular-nums tracking-tight text-white">{display}</span>
+        <span className="mb-1 text-xs text-slate-500">/ 100</span>
       </div>
-      <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-800">
+      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-800">
         <motion.div
           className="h-full rounded-full"
           style={{

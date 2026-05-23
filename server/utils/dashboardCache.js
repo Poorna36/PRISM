@@ -211,11 +211,31 @@ async function buildDashboard(productId, platformFilter) {
     }
   }
 
+  // Quality metrics: duplicate detection stats
+  const flaggedByReason = {};
+  for (const r of allForProduct) {
+    if (r.status === 'flagged') {
+      const reason = r.flag_reason || 'unknown';
+      // Normalize near-duplicate reasons to one category
+      const category = reason.includes('Near-duplicate') ? 'near_duplicate' : reason.toLowerCase().replace(/\s+/g, '_');
+      flaggedByReason[category] = (flaggedByReason[category] || 0) + 1;
+    }
+  }
+
+  const qualityMetrics = {
+    total_ingested: reviewCount,
+    passed_quality_check: reviewCount - flaggedCount,
+    flagged_as_spam_or_duplicate: flaggedCount,
+    flagged_breakdown: flaggedByReason,
+    quality_pass_rate: reviewCount > 0 ? +((1 - flaggedCount / reviewCount) * 100).toFixed(1) : 100,
+  };
+
   return {
     product_id: productId,
     health_score: healthScore,
     review_count: reviewCount,
     flagged_count: flaggedCount,
+    quality_metrics: qualityMetrics,
     feature_sentiment: fs,
     product_summary: summary,
     issues: issues.map(i => i.toJSON()),
