@@ -19,6 +19,7 @@ import FlaggedCounter from '../components/Dashboard/FlaggedCounter';
 import LiveReviewCounter from '../components/Dashboard/LiveReviewCounter';
 import PDFExportButton from '../components/Dashboard/PDFExportButton';
 import AlertCenter from '../components/Dashboard/AlertCenter';
+import QualityMetricsCard from '../components/Dashboard/QualityMetricsCard';
 import DemoCenter from '../components/DemoCenter/DemoCenter';
 import DashboardSkeleton from '../components/Dashboard/DashboardSkeleton';
 
@@ -230,15 +231,17 @@ export default function MainPage() {
 
                   <div className="grid gap-4 lg:grid-cols-2">
                     <HealthScoreCard score={dash?.health_score} productName={productLabel} />
-                    <div className="panel space-y-3 p-4 shadow-panel">
-                      <p className="section-label">Pipeline quality</p>
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <FlaggedCounter count={dash?.flagged_count} />
-                        <LiveReviewCounter count={dash?.review_count} />
-                      </div>
-                      <div className="border-t border-slate-700/50 pt-3">
-                        <PDFExportButton productId={productId} platform={platform || 'all'} />
-                      </div>
+                    <QualityMetricsCard qualityMetrics={dash?.quality_metrics} />
+                  </div>
+
+                  <div className="panel space-y-3 p-4 shadow-panel">
+                    <p className="section-label">Pipeline summary</p>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <FlaggedCounter count={dash?.flagged_count} />
+                      <LiveReviewCounter count={dash?.review_count} />
+                    </div>
+                    <div className="border-t border-slate-700/50 pt-3">
+                      <PDFExportButton productId={productId} platform={platform || 'all'} />
                     </div>
                   </div>
 

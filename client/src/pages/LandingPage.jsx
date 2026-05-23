@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Prism from '../components/Prism';
 import AboutPage from './AboutPage';
+import TutorialShowcase from '../components/TutorialShowcase';
+
 
 export default function LandingPage({ onEnter }) {
   const [activePage, setActivePage] = useState('home');
+  const [showTutorial, setShowTutorial] = useState(false);
 
   if (activePage === 'about') {
     return <AboutPage onBack={() => setActivePage('home')} />;
@@ -21,6 +24,23 @@ export default function LandingPage({ onEnter }) {
         fontFamily: 'system-ui, -apple-system, sans-serif'
       }}
     >
+      {/* Pulse dot keyframe */}
+      <style>{`
+        @keyframes pulse-dot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(0.7); }
+        }
+        @keyframes watch-glow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); }
+          50% { box-shadow: 0 0 20px 4px rgba(99,102,241,0.45); }
+        }
+      `}</style>
+
+      {/* Tutorial Showcase */}
+      <AnimatePresence>
+        {showTutorial && <TutorialShowcase onClose={() => setShowTutorial(false)} />}
+      </AnimatePresence>
+
       {/* Full-screen Prism WebGL background */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <Prism
@@ -68,7 +88,47 @@ export default function LandingPage({ onEnter }) {
         </span>
 
         {/* Nav Links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          {/* Watch Tutorial button — special style */}
+          <button
+            id="watch-tutorial-btn"
+            onClick={() => setShowTutorial(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'linear-gradient(135deg, rgba(99,102,241,0.3), rgba(168,85,247,0.2))',
+              border: '1px solid rgba(99,102,241,0.5)',
+              borderRadius: '999px',
+              padding: '8px 20px',
+              color: '#c4b5fd',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              letterSpacing: '0.1em',
+              cursor: 'pointer',
+              backdropFilter: 'blur(8px)',
+              transition: 'all 0.25s ease',
+              textTransform: 'uppercase',
+              animation: 'watch-glow 3s ease-in-out infinite',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(99,102,241,0.5), rgba(168,85,247,0.4))';
+              e.currentTarget.style.color = '#ede9fe';
+              e.currentTarget.style.transform = 'scale(1.04)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(99,102,241,0.3), rgba(168,85,247,0.2))';
+              e.currentTarget.style.color = '#c4b5fd';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            {/* Play icon */}
+            <svg width="9" height="11" viewBox="0 0 9 11" fill="currentColor">
+              <path d="M0 0L9 5.5L0 11V0Z" />
+            </svg>
+            Watch Tutorial
+          </button>
+
           {[
             { label: 'About', onClick: () => setActivePage('about') },
             { label: 'Login', onClick: onEnter, highlight: true },
