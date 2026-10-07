@@ -7,8 +7,14 @@ const axios = require('axios');
 async function normalize(review) {
   const inputText = review.transcript || review.review_text;
 
-  if (!inputText || inputText.trim().length === 0) {
-    return { normalized_text: '', detected_language: 'unknown' };
+  // If text is pure standard English with no Indian language / Hinglish markers, clean and return quickly
+  const needsTranslation = /[^\x00-\x7F]/.test(inputText) || /\b(bahut|khatam|bekar|badiya|badhiya|ekdum|nahi|hai|karna|padta|paisa|vasool|bohot|gandi|dabba|chahiye|chal|raha)\b/i.test(inputText);
+
+  if (!needsTranslation && process.env.SKIP_ENGLISH_TRANSLATION !== 'false') {
+    return {
+      normalized_text: basicCleanup(inputText),
+      detected_language: 'en',
+    };
   }
 
   try {

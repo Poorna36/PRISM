@@ -8,7 +8,7 @@ const { sendSurveyEmail } = require('../utils/mailer');
 const { getProductName } = require('../utils/productCatalog');
 
 /** @see https://ai.google.dev/gemini-api/docs/models — use env override if a model is unavailable for your project */
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
 
 function stripCodeFences(text) {
   if (!text) return '';

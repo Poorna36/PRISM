@@ -66,18 +66,29 @@ async function main() {
   const total = rows.length;
   const t0 = Date.now();
 
+  const normalize = require('./pipeline/normalize');
+  const trust = require('./pipeline/trust');
+  const extract = require('./pipeline/extract');
+  const graph = require('./pipeline/graph');
+  const timeseries = require('./pipeline/timeseries');
+  const confidence = require('./pipeline/confidence');
+  const { warmAll } = require('./utils/dashboardCache');
+
+  const productsSeen = new Set();
+
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
     const text = row.review_text || row.transcript;
     if (!text || !String(text).trim()) {
-      console.warn(`[ingest] skip row ${i}: no review_text/transcript`);
       fail++;
       continue;
     }
 
     try {
-      const review = await Review.create({
-        id: uuidv4(),
+      productsSeen.add(row.product_id);
+      const reviewId = uuidv4();
+      const reviewObj = {
+        id: reviewId,
         product_id: row.product_id,
         platform: row.platform,
         review_text: row.review_text || null,
@@ -87,22 +98,78 @@ async function main() {
         media_type: row.media_type || 'none',
         timestamp: row.timestamp ? new Date(row.timestamp) : new Date(),
         status: 'queued',
+      };
+
+      // Stage 1: Normalize
+      const norm = await normalize.process(reviewObj);
+      reviewObj.normalized_text = norm.normalized_text;
+      reviewObj.detected_language = norm.detected_language;
+
+      // Stage 2: Trust Filter
+      const trustRes = await trust.process(reviewObj);
+      reviewObj.text_hash = trustRes.hash;
+
+      if (!trustRes.pass) {
+        reviewObj.status = 'flagged';
+        reviewObj.flag_reason = trustRes.reason;
+        await Review.create(reviewObj);
+        ok++;
+        continue;
+      }
+
+      // Stage 3: Feature Extraction & Sentiment
+      const extractRes = await extract.process(norm.normalized_text, row.rating, row.product_id);
+      reviewObj.features = JSON.stringify(extractRes.features);
+      reviewObj.embedding = extractRes.embedding ? JSON.stringify(extractRes.embedding) : null;
+      reviewObj.status = 'processed';
+
+      const createdReview = await Review.create(reviewObj);
+
+      // Create GraphNode
+      const weekStr = graph.getWeekString ? graph.getWeekString(reviewObj.timestamp) : new Date(reviewObj.timestamp).toISOString().slice(0, 10);
+      const featKeys = Object.keys(extractRes.features || {});
+      const sentiments = {};
+      for (const [f, d] of Object.entries(extractRes.features || {})) sentiments[f] = d.sentiment;
+
+      await GraphNode.create({
+        id: uuidv4(),
+        review_id: createdReview.id,
+        product_id: row.product_id,
+        platform: row.platform,
+        features: JSON.stringify(featKeys),
+        sentiments: JSON.stringify(sentiments),
+        week: weekStr,
+        embedding: extractRes.embedding ? JSON.stringify(extractRes.embedding) : null,
       });
 
-      await runPipeline(review.id);
       ok++;
     } catch (err) {
       console.warn(`[ingest] row ${i} failed:`, err.message);
       fail++;
     }
 
-    if ((i + 1) % 50 === 0 || i + 1 === total) {
+    if ((i + 1) % 100 === 0 || i + 1 === total) {
       const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-      console.log(`[ingest] ${i + 1}/${total} done (${ok} ok, ${fail} skipped/fail) — ${elapsed}s`);
+      console.log(`[ingest] Ingested ${i + 1}/${total} reviews (${ok} ok, ${fail} skipped/fail) — ${elapsed}s`);
     }
   }
 
-  console.log(`[ingest] Finished: ${ok} processed, ${fail} skipped/errors in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+  console.log(`\n[ingest] Building Graph Edges, Clusters, Time-Series & Confidence for products: ${Array.from(productsSeen).join(', ')}...`);
+  for (const pid of productsSeen) {
+    try {
+      const edgeCount = await graph.buildAllEdges(pid);
+      console.log(`  ✓ Created ${edgeCount} graph edges & classified clusters for ${pid}`);
+      await timeseries.process(pid);
+      await confidence.process(pid);
+      console.log(`  ✓ Time-series & confidence analysis complete for ${pid}`);
+    } catch (e) {
+      console.warn(`  ✗ Analysis error for ${pid}:`, e.message);
+    }
+  }
+
+  console.log('[ingest] Warming dashboard cache...');
+  await warmAll();
+  console.log(`[ingest] All done in ${((Date.now() - t0) / 1000).toFixed(1)}s!`);
   process.exit(0);
 }
 

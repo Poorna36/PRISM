@@ -243,7 +243,15 @@ async function buildDashboard(productId, platformFilter) {
         const sentiment = primary && sentiments[primary] != null
           ? sentiments[primary]
           : Object.values(sentiments)[0] || null;
-        return { id: n.id, feature: primary, features: featureList, sentiment, week: n.week };
+        return {
+          id: n.id,
+          feature: primary,
+          features: featureList,
+          sentiment,
+          week: n.week,
+          cluster_id: n.cluster_id,
+          cluster_type: n.cluster_type || 'isolated',
+        };
       }),
       edges: edges.map((e) => ({
         source: e.source_node_id, target: e.target_node_id, weight: e.weight,

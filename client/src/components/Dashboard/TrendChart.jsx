@@ -39,50 +39,79 @@ export default function TrendChart({
 }) {
   const [mode, setMode] = useState('positive');
 
-  // MOCK DATA FOR HACKATHON DEMO
+  // Process real weekly trends from backend with linear interpolation across sparse weeks
   const data = useMemo(() => {
-    const weeks = [];
-    // Generate 12 weeks of historical data
-    for (let i = 12; i >= 1; i--) {
-      weeks.push(`2026-W${20 - i}`);
+    if (!weeklyTrends || !weeklyTrends.length) return [];
+
+    // Take the most recent weeks (up to 16 for clean display, or all if <= 16)
+    const rawWeeks = weeklyTrends.length > 16 ? weeklyTrends.slice(-16) : weeklyTrends;
+
+    // 1. Extract raw sentiment values per feature based on selected mode
+    const series = {};
+    for (const f of FEATURE_ORDER) {
+      series[f] = rawWeeks.map((w) => {
+        const raw = mode === 'positive' ? w[f] : w[`${f}_negative`];
+        return raw !== null && raw !== undefined ? Number(raw) : null;
+      });
     }
-    
-    return weeks.map((week, idx) => {
-      const out = { week };
-      for (const f of FEATURE_ORDER) {
-        // Base random value around 80% positive
-        let val = 0.7 + (Math.random() * 0.25);
-        
-        // Create a fake spike for battery_life in W17 (negative)
-        if (f === 'battery_life' && mode === 'negative' && week === '2026-W17') {
-          val = 0.95;
-        } else if (f === 'build_quality' && mode === 'negative') {
-          // Sustained design issue for build quality
-          val = 0.6 + (Math.random() * 0.1);
-        } else if (mode === 'negative') {
-          val = 1 - val; // Invert for negative view
+
+    // 2. Interpolate, back-fill, and forward-fill each feature line
+    for (const f of FEATURE_ORDER) {
+      const arr = series[f];
+      const firstIdx = arr.findIndex((v) => v !== null);
+
+      if (firstIdx === -1) {
+        // Feature had zero mentions across all weeks: set sensible neutral baseline
+        const defaultVal = mode === 'positive' ? 0.85 : 0.15;
+        for (let i = 0; i < arr.length; i++) arr[i] = defaultVal;
+        continue;
+      }
+
+      // Back-fill leading nulls
+      for (let i = 0; i < firstIdx; i++) {
+        arr[i] = arr[firstIdx];
+      }
+
+      // Interpolate between observed data points
+      let lastKnownIdx = firstIdx;
+      for (let i = firstIdx + 1; i < arr.length; i++) {
+        if (arr[i] !== null) {
+          const gap = i - lastKnownIdx;
+          const startVal = arr[lastKnownIdx];
+          const endVal = arr[i];
+          for (let j = 1; j < gap; j++) {
+            arr[lastKnownIdx + j] = +(startVal + (endVal - startVal) * (j / gap)).toFixed(2);
+          }
+          lastKnownIdx = i;
         }
-        
-        // Add some noise
-        val = Math.max(0, Math.min(1, val));
-        out[f] = val;
+      }
+
+      // Forward-fill trailing nulls with last known score
+      for (let i = lastKnownIdx + 1; i < arr.length; i++) {
+        arr[i] = arr[lastKnownIdx];
+      }
+    }
+
+    // 3. Assemble chart data
+    return rawWeeks.map((w, idx) => {
+      const out = { week: w.week };
+      for (const f of FEATURE_ORDER) {
+        out[f] = series[f][idx];
       }
       return out;
     });
-  }, [mode]);
+  }, [weeklyTrends, mode]);
 
   const lines = useMemo(() => {
     return activeFeature ? [activeFeature] : FEATURE_ORDER;
   }, [activeFeature]);
 
+  // Use real hints from Stage 5 Time-Series analysis
   const hintWeeks = useMemo(() => {
-    const hints = [
-      { week: '2026-W17', feature: 'battery_life', pattern: 'batch_spike' },
-      { week: '2026-W14', feature: 'build_quality', pattern: 'design_creep' }
-    ];
+    const hints = timeseriesVisual?.hints || [];
     if (!activeFeature) return hints;
     return hints.filter((h) => h.feature === activeFeature);
-  }, [activeFeature]);
+  }, [timeseriesVisual, activeFeature]);
 
   if (!data.length) {
     return (
@@ -125,7 +154,13 @@ export default function TrendChart({
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.6} />
-            <XAxis dataKey="week" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={{ stroke: '#475569' }} />
+            <XAxis
+              dataKey="week"
+              tick={{ fill: '#94a3b8', fontSize: 10 }}
+              axisLine={{ stroke: '#475569' }}
+              tickFormatter={(w) => (w ? w.replace(/^\d{4}-/, '') : '')}
+              interval="preserveStartEnd"
+            />
             <YAxis
               domain={[0, 1]}
               tickFormatter={(v) => `${Math.round(v * 100)}%`}
