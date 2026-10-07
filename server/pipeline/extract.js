@@ -20,6 +20,10 @@ const NEGATIVE_WORDS = new Set([
   'disappointed', 'frustrating', 'defective', 'flimsy', 'overpriced', 'expensive',
   'issue', 'problem', 'complaint', 'refund', 'return', 'fail', 'failed', 'crash',
   'dead', 'weak', 'missing', 'delayed', 'late', 'pathetic', 'regret', 'worse',
+  'defect', 'defects', 'drain', 'drains', 'draining', 'died', 'dies', 'dying',
+  'faulty', 'damage', 'damages', 'shut', 'shuts', 'severe', 'crushed', 'torn',
+  'dented', 'crumpled', 'unresponsive', 'unreachable', 'discharging', 'discharge',
+  'bakwas', 'bekar', 'phata', 'gandi', 'khatam', 'tampered',
 ]);
 
 const NEGATION_WORDS = new Set(['not', 'no', 'never', 'neither', 'nor', "don't", "doesn't", "didn't", "won't", "wouldn't", "can't", "cannot"]);
@@ -84,7 +88,7 @@ async function extract(normalizedText, rating, productId) {
     }
 
     // Score sentiment on the best sentence
-    const sentimentResult = scoreSentiment(bestSentence);
+    const sentimentResult = scoreSentiment(bestSentence, rating ?? null);
 
     // Detect ambiguity
     const ambiguity = detectAmbiguity(bestSentence, sentimentResult, rating ?? null);
@@ -102,7 +106,7 @@ async function extract(normalizedText, rating, productId) {
   return { features, embedding: reviewEmbedding };
 }
 
-function scoreSentiment(text) {
+function scoreSentiment(text, rating = null) {
   const words = text.toLowerCase().split(/\s+/);
   let positiveScore = 0;
   let negativeScore = 0;
@@ -127,6 +131,10 @@ function scoreSentiment(text) {
 
   const total = positiveScore + negativeScore;
   if (total === 0) {
+    if (rating !== null && rating !== undefined) {
+      if (rating <= 2) return { sentiment: 'negative', confidence: 0.85 };
+      if (rating >= 4) return { sentiment: 'positive', confidence: 0.85 };
+    }
     return { sentiment: 'positive', confidence: 0.5 };
   }
 

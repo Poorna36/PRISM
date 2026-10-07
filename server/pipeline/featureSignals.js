@@ -4,7 +4,7 @@
  */
 
 /** Score used when a keyword rule fires — chosen to sit in the same scale as cosine sim (~0.35–0.65). */
-const KEYWORD_BASE_SCORE = 0.58;
+const KEYWORD_BASE_SCORE = 0.65;
 
 /**
  * Case-insensitive patterns per feature. Any match tags the review for that feature.
@@ -15,23 +15,23 @@ const FEATURE_PATTERNS = {
     /\b(lag|lags|laggy|stutter|fps|hz|hertz|refresh|latency|input lag|ghosting|frame)\b/i,
     /\b(performance|snappy|responsive|smooth|speed|fast|slow)\b/i,
     /\b(gaming|gameplay|graphics|gpu|cpu)\b/i,
-    /\b(anc|noise cancel|sound quality|audio driver)\b/i,
+    /\b(anc|noise cancel|sound quality|audio driver|sound|bass|treble|muffled|volume|audio)\b/i,
   ],
   battery_life: [
-    /\b(battery|charging|charger|usb[\s-]?c|mah|hours?\s+(on|of)|drain|backup|power)\b/i,
-    /\b(dies|die\s+fast|lasts?\s+(long|short)|charge\s+speed)\b/i,
+    /\b(battery|charging|charger|usb[\s-]?c|mah|hours?\s+(on|of)|drain|drains|draining|backup|power)\b/i,
+    /\b(dies|die\s+fast|lasts?\s+(long|short)|charge\s+speed|discharge|discharging)\b/i,
   ],
   packaging: [
-    /\b(packaging|unbox|box|carton|outer\s+box|sealed|bubble|wrap)\b/i,
-    /\b(crushed\s+box|damaged\s+box|torn\s+box)\b/i,
+    /\b(packaging|unbox|unboxing|box|carton|outer\s+box|sealed|bubble|wrap)\b/i,
+    /\b(crushed\s+box|damaged\s+box|torn\s+box|dented|crumpled)\b/i,
   ],
   build_quality: [
-    /\b(build|durability|plastic|metal|hinge|sturdy|flimsy|solid|premium\s+feel|scratch)\b/i,
-    /\b(quality|construction|materials?|cheap\s+feel|well\s+built)\b/i,
+    /\b(build|durability|plastic|metal|hinge|sturdy|flimsy|solid|premium\s+feel|scratch|scratches)\b/i,
+    /\b(quality|construction|materials?|cheap\s+feel|well\s+built|wobble|loose)\b/i,
   ],
   customer_support: [
-    /\b(support|service|warranty|helpline|customer\s+care|refund|replacement|rma)\b/i,
-    /\b(response\s*time|ticket|after[\s-]?sales)\b/i,
+    /\b(support|service|warranty|helpline|customer\s+care|refund|replacement|rma|after[\s-]?sales)\b/i,
+    /\b(response\s*time|ticket|executive|care\s+center|service\s+center)\b/i,
   ],
   delivery_speed: [
     /\b(deliver(y|ed|ies)?|shipping|shipped|courier|dispatch|arrived|late|early|on\s*time)\b/i,
@@ -40,15 +40,15 @@ const FEATURE_PATTERNS = {
   value_for_money: [
     /\b(price|priced|cost|costly|cheap|expensive|affordable|deal|worth|value|mrp|discount)\b/i,
     /\b(overpriced|bang\s+for|money|budget|steal|rip[\s-]?off)\b/i,
-    /\b(sasta|mehnga|mehenga|kimat)\b/i,
+    /\b(sasta|mehnga|mehenga|kimat|paisa\s+vasool)\b/i,
   ],
 };
 
-/** Extra regex per product_id — nudges domain vocabulary into the right feature buckets. */
+/** Extra regex per product_id — low weight fallback if no specific feature matches. */
 const PRODUCT_HINTS = {
   prod_001: [
-    [/\b(earbuds?|tws|earphones?|buds?|anc)\b/i, 'performance'],
-    [/\b(case|charging case|ear\s*tip)\b/i, 'build_quality'],
+    [/\b(earbuds?|tws|earphones?|buds?)\b/i, 'performance'],
+    [/\b(charging case|ear\s*tip)\b/i, 'build_quality'],
   ],
   prod_002: [
     [/\b(fridge|refrigerator|cooling|compressor|freezer|ice)\b/i, 'performance'],
@@ -79,13 +79,14 @@ function detectKeywordFeatures(text, productId) {
     }
   }
 
+  // Only attach product hint if specific topic matches are sparse, with lower score (0.45)
   const hints = PRODUCT_HINTS[productId];
-  if (hints) {
+  if (hints && Object.keys(matches).length === 0) {
     for (const [re, feat] of hints) {
       re.lastIndex = 0;
       if (re.test(lower)) {
-        const prev = matches[feat]?.similarity ?? 0;
-        matches[feat] = { similarity: Math.max(prev, KEYWORD_BASE_SCORE + 0.02), source: 'product_hint' };
+        matches[feat] = { similarity: 0.45, source: 'product_hint' };
+        break;
       }
     }
   }

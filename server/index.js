@@ -53,9 +53,9 @@ app.use('/api/survey', surveyRoutes);
 // Protected routes — require valid JWT
 app.use('/api/dashboard', authMiddleware, dashboardRoutes);
 app.use('/api/alerts', authMiddleware, alertRoutes);
-app.use('/api/demo', authMiddleware, demoRoutes);
+app.use('/api/demo', demoRoutes);
 app.use('/api/reports', authMiddleware, reportRoutes);
-app.use('/api/settings', authMiddleware, settingsRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Static files for reports
 app.use('/reports', express.static(path.join(__dirname, 'reports')));

@@ -171,21 +171,132 @@ async function classifyClusters(productId) {
     const weeks = new Set(clusterNodes.map(n => n.week));
     const clusterId = uuidv4();
 
+    // Check sentiment of nodes in component
+    let negCount = 0;
+    let posCount = 0;
+    for (const cn of clusterNodes) {
+      let sentiments = {};
+      try { sentiments = JSON.parse(cn.sentiments || '{}'); } catch {}
+      const vals = Object.values(sentiments);
+      if (vals.includes('negative')) negCount++;
+      if (vals.includes('positive')) posCount++;
+    }
+
     let clusterType;
-    if (clusterNodes.length >= 8 && weeks.size >= 3) {
-      clusterType = 'systemic';
-    } else if (clusterNodes.length >= 5 && weeks.size <= 2) {
-      clusterType = 'batch';
-    } else if (clusterNodes.length <= 1) {
+    if (clusterNodes.length <= 1) {
       clusterType = 'isolated';
+    } else if (negCount >= posCount) {
+      // Defect / complaint cluster
+      // Concentrated complaint burst in <= 3 weeks with >= 4 nodes = BATCH DEFECT (production lot anomaly)
+      if (weeks.size <= 3 && clusterNodes.length >= 4) {
+        clusterType = 'batch';
+      } else {
+        // Spanning 4+ weeks chronically = systemic design/firmware issue
+        clusterType = 'systemic';
+      }
     } else {
-      clusterType = weeks.size >= 3 ? 'systemic' : 'batch';
+      // Positive feature sentiment community
+      clusterType = 'feature_cluster';
     }
 
     for (const n of clusterNodes) {
       await n.update({ cluster_id: clusterId, cluster_type: clusterType });
     }
   }
+}
+
+async function buildAllEdges(productId) {
+  const nodes = await GraphNode.findAll({ where: { product_id: productId } });
+  if (nodes.length < 2) return 0;
+
+  // Clear existing edges for this product
+  await GraphEdge.destroy({ where: { product_id: productId } });
+
+  const edgesToInsert = [];
+
+  for (let i = 0; i < nodes.length; i++) {
+    const n1 = nodes[i];
+    let f1, s1;
+    try { f1 = JSON.parse(n1.features || '[]'); } catch { f1 = []; }
+    try { s1 = JSON.parse(n1.sentiments || '{}'); } catch { s1 = {}; }
+
+    for (let j = i + 1; j < nodes.length; j++) {
+      const n2 = nodes[j];
+      let f2, s2;
+      try { f2 = JSON.parse(n2.features || '[]'); } catch { f2 = []; }
+      try { s2 = JSON.parse(n2.sentiments || '{}'); } catch { s2 = {}; }
+
+      // REQUIRE identical primary feature to avoid giant multi-topic mega-components
+      const primary1 = f1[0];
+      const primary2 = f2[0];
+      if (!primary1 || !primary2 || primary1 !== primary2) continue;
+
+      // REQUIRE sentiment match on primary feature: NEVER link positive reviews to defects!
+      if (s1[primary1] !== s2[primary2]) continue;
+
+      const wDist = weekDistance(n1.week, n2.week);
+      
+      let shouldConnect = false;
+      let edgeWeight = 0.50;
+
+      // Same week reviews about the same topic connect strongly
+      if (wDist === 0) {
+        shouldConnect = true;
+        edgeWeight = 0.85;
+      } else if (wDist === 1) {
+        // Adjacent weeks: connect if embedding similarity is good or fallback
+        if (n1.embedding && n2.embedding) {
+          try {
+            const e1 = JSON.parse(n1.embedding);
+            const e2 = JSON.parse(n2.embedding);
+            const sim = embeddings.cosineSimilarity(e1, e2);
+            if (sim > 0.60) {
+              shouldConnect = true;
+              edgeWeight = 0.70 + sim * 0.25;
+            }
+          } catch {
+            shouldConnect = true;
+            edgeWeight = 0.70;
+          }
+        } else {
+          shouldConnect = true;
+          edgeWeight = 0.70;
+        }
+      } else if (wDist === 2) {
+        // 2 weeks apart: require high semantic similarity
+        if (n1.embedding && n2.embedding) {
+          try {
+            const e1 = JSON.parse(n1.embedding);
+            const e2 = JSON.parse(n2.embedding);
+            const sim = embeddings.cosineSimilarity(e1, e2);
+            if (sim > 0.70) {
+              shouldConnect = true;
+              edgeWeight = 0.60 + sim * 0.25;
+            }
+          } catch {}
+        }
+      }
+
+      if (shouldConnect && edgeWeight >= 0.50) {
+        edgesToInsert.push({
+          id: uuidv4(),
+          source_node_id: n1.id,
+          target_node_id: n2.id,
+          weight: +edgeWeight.toFixed(3),
+          product_id: productId,
+        });
+      }
+    }
+  }
+
+  // Bulk create in chunks of 500
+  for (let k = 0; k < edgesToInsert.length; k += 500) {
+    await GraphEdge.bulkCreate(edgesToInsert.slice(k, k + 500));
+  }
+
+  // Classify clusters after edge generation
+  await classifyClusters(productId);
+  return edgesToInsert.length;
 }
 
 async function processDemo(review, extractResult) {
@@ -195,4 +306,4 @@ async function processDemo(review, extractResult) {
   };
 }
 
-module.exports = { process: processGraph, processDemo, classifyClusters };
+module.exports = { process: processGraph, processDemo, classifyClusters, buildAllEdges, getWeekString };

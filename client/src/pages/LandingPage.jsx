@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Prism from '../components/Prism';
 import AboutPage from './AboutPage';
+import TutorialPage from './TutorialPage';
 
 export default function LandingPage({ onEnter }) {
   const [activePage, setActivePage] = useState('home');
@@ -71,8 +72,8 @@ export default function LandingPage({ onEnter }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
           {[
             { label: 'About', onClick: () => setActivePage('about') },
+            { label: 'Tutorial', onClick: () => setActivePage('tutorial') },
             { label: 'Login', onClick: onEnter, highlight: true },
-            { label: 'Contact', onClick: null },
           ].map(({ label, onClick, highlight }) => (
             <button
               key={label}
@@ -179,6 +180,13 @@ export default function LandingPage({ onEnter }) {
           © {new Date().getFullYear()} PRISM — Customer Review Intelligence. All rights reserved.
         </p>
       </motion.footer>
+
+      {/* Tutorial Popup Modal */}
+      <AnimatePresence>
+        {activePage === 'tutorial' && (
+          <TutorialPage onBack={() => setActivePage('home')} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -20,6 +20,7 @@ router.post('/run', async (req, res) => {
   });
 
   const sendEvent = (event, data) => {
+    if (res.writableEnded || res.destroyed) return;
     res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   };
 
